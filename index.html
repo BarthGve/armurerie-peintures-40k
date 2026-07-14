@@ -158,6 +158,26 @@
   .paint.have .sw::after { transform: translateX(20px); background: #eafff0; }
   .empty { text-align: center; color: var(--muted); font-size: 13px; letter-spacing: 1px; padding: 30px 0; }
 
+  /* ======= RECIPES ======= */
+  .rsum { font-size: 12px; letter-spacing: .5px; color: var(--bone-dim); margin-bottom: 12px; text-align: center; }
+  .rsum b { color: var(--gold); font-weight: 700; }
+  .rlist { display: flex; flex-direction: column; gap: 8px; }
+  .rcard { background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--line); border-left: 3px solid var(--line); border-radius: 6px; padding: 11px 13px; }
+  .rcard.dim { opacity: .5; }
+  .rhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .rbase { font-size: 15px; font-weight: 700; letter-spacing: .5px; color: var(--gold); }
+  .rmini { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+  .rtags { display: flex; gap: 6px; }
+  .rtag { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; padding: 3px 8px; border-radius: 4px; border: 1px solid; }
+  .rtag.ok { color: var(--green); border-color: var(--green-dim); background: rgba(91,191,106,.1); }
+  .rtag.no { color: #e07a6a; border-color: #7a3a30; background: rgba(224,90,74,.08); }
+  .rrow { display: flex; align-items: center; gap: 6px; padding: 3px 0; flex-wrap: wrap; }
+  .rlbl { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); width: 46px; flex: none; }
+  .rchip { font-size: 12px; letter-spacing: .3px; padding: 3px 9px; border-radius: 4px; border: 1px solid var(--line-hot); white-space: nowrap; }
+  .rchip.ok { color: var(--green); border-color: var(--green-dim); background: rgba(91,191,106,.1); }
+  .rchip.no { color: #e07a6a; border-color: #7a3a30; }
+  .rchip.unk { color: var(--muted); border-style: dashed; }
+
   .hidden { display: none !important; }
 
   .banner { margin: 0 0 14px; padding: 11px 14px; border-radius: 6px; border: 1px solid #6b4f1a;
@@ -226,6 +246,21 @@
     <div class="list" id="list"></div>
   </div>
 
+  <!-- ===== RECIPES VIEW ===== -->
+  <div id="view-recipes" class="hidden">
+    <div class="rsum" id="rsum"></div>
+    <div class="toolbar">
+      <div class="search"><span class="ico">⌕</span><input id="rq" type="search" placeholder="Rechercher une base…" aria-label="Rechercher une base" /></div>
+      <div class="chips">
+        <button class="chip on" data-rf="have" type="button">Bases détenues</button>
+        <button class="chip" data-rf="ready" type="button">Prêtes</button>
+        <button class="chip" data-rf="missing" type="button">Manque</button>
+        <button class="chip" data-rf="all" type="button">Toutes</button>
+      </div>
+    </div>
+    <div class="rlist" id="rlist"></div>
+  </div>
+
   <footer>
     <div class="totline"><span id="t-word">Détenus</span> <b id="t-have">0</b> / <b id="t-all">0</b> pots</div>
     <button class="refresh" id="refresh" type="button">↻ Actualiser</button>
@@ -248,6 +283,50 @@
   ];
   var GOLD1 = "#a8873a", GOLD2 = "#f0d878";
   var COLOR = {}; TYPES.forEach(function (t) { COLOR[t.id] = t; });
+
+  // Citadel Painting System — recettes lues sur l'affiche.
+  // b=Base, l1=Layer 1, l2=Layer 2, dry=Dry, sh=Shade. (matching insensible casse/espaces/ponctuation)
+  var RECIPES = [
+    { b: "Celestra Grey", l1: "Ulthuan Grey", l2: "White Scar", dry: "Praxeti White", sh: "Nuln Oil" },
+    { b: "Rakarth Flesh", l1: "Pallid Wych Flesh", l2: "White Scar", dry: "Praxeti White", sh: "Reikland Fleshshade" },
+    { b: "Averland Sunset", l1: "Yriel Yellow", l2: "Flash Gitz Yellow", dry: "Hexos Palesun", sh: "Casandora Yellow" },
+    { b: "Jokaero Orange", l1: "Trollslayer Orange", l2: "Fire Dragon Bright", dry: "Kindleflame", sh: "Fuegan Orange" },
+    { b: "Mephiston Red", l1: "Evil Sunz Scarlet", l2: "Wild Rider Red", dry: "Kindleflame", sh: "Carroburg Crimson" },
+    { b: "Khorne Red", l1: "Wazdakka Red", l2: "Squig Orange", dry: "Kindleflame", sh: "Carroburg Crimson" },
+    { b: "Screamer Pink", l1: "Pink Horror", l2: "Emperor's Children", dry: "Changeling Pink", sh: "Carroburg Crimson" },
+    { b: "Naggaroth Night", l1: "Xereus Purple", l2: "Genestealer Purple", dry: "Lucius Lilac", sh: "Druchii Violet" },
+    { b: "Daemonette Hide", l1: "Warpfiend Grey", l2: "Slaanesh Grey", dry: "Praxeti White", sh: "Druchii Violet" },
+    { b: "Kantor Blue", l1: "Alaitoc Blue", l2: "Hoeth Blue", dry: "Etherium Blue", sh: "Drakenhof Nightshade" },
+    { b: "Macragge Blue", l1: "Altdorf Guard Blue", l2: "Calgar Blue", dry: "Etherium Blue", sh: "Drakenhof Nightshade" },
+    { b: "Caledor Sky", l1: "Teclis Blue", l2: "Lothern Blue", dry: "Etherium Blue", sh: "Drakenhof Nightshade" },
+    { b: "The Fang", l1: "Russ Grey", l2: "Fenrisian Grey", dry: "Etherium Blue", sh: "Nuln Oil" },
+    { b: "Stegadon Scale Green", l1: "Sotek Green", l2: "Temple Guard Blue", dry: "Skink Blue", sh: "Coelia Greenshade" },
+    { b: "Incubi Darkness", l1: "Kabalite Green", l2: "Sybarite Green", dry: "Hellion Green", sh: "Coelia Greenshade" },
+    { b: "Caliban Green", l1: "Warpstone Glow", l2: "Moot Green", dry: "Underhive Ash", sh: "Nuln Oil" },
+    { b: "Waaagh! Flesh", l1: "Warboss Green", l2: "Skarsnik Green", dry: "Underhive Ash", sh: "Biel-Tan Green" },
+    { b: "Castellan Green", l1: "Loren Forest", l2: "Straken Green", dry: "Underhive Ash", sh: "Athonian Camoshade" },
+    { b: "Castellan Green", l1: "Straken Green", l2: "Nurgling Green", dry: "Underhive Ash", sh: "Athonian Camoshade" },
+    { b: "Deathworld Forest", l1: "Elysian Green", l2: "Ogryn Camo", dry: "Underhive Ash", sh: "Athonian Camoshade" },
+    { b: "Zandri Dust", l1: "Ushabti Bone", l2: "Screaming Skull", dry: "Praxeti White", sh: "Seraphim Sepia" },
+    { b: "Steel Legion Drab", l1: "Tallarn Sand", l2: "Karak Stone", dry: "Terminatus Stone", sh: "Reikland Fleshshade" },
+    { b: "Bugman's Glow", l1: "Cadian Fleshtone", l2: "Kislev Flesh", dry: "Tyrant Skull", sh: "Reikland Fleshshade" },
+    { b: "Ratskin Flesh", l1: "Bestigor Flesh", l2: "Ungor Flesh", dry: "Tyrant Skull", sh: "Reikland Fleshshade" },
+    { b: "Mournfang Brown", l1: "Skrag Brown", l2: "Deathclaw Brown", dry: "Tyrant Skull", sh: "Agrax Earthshade" },
+    { b: "XV-88", l1: "Tau Light Ochre", l2: "Ungor Flesh", dry: "Tyrant Skull", sh: "Agrax Earthshade" },
+    { b: "XV-88", l1: "Balor Brown", l2: "Zamesi Desert", dry: "Terminatus Stone", sh: "Seraphim Sepia" },
+    { b: "Rhinox Hide", l1: "Doombull Brown", l2: "Tuskgor Fur", dry: "Terminatus Stone", sh: "Agrax Earthshade" },
+    { b: "Dryad Bark", l1: "Gorthor Brown", l2: "Baneblade Brown", dry: "Terminatus Stone", sh: "Agrax Earthshade" },
+    { b: "Mechanicus Standard Grey", l1: "Dawnstone", l2: "Administratum Grey", dry: "Longbeard Grey", sh: "Nuln Oil" },
+    { b: "Abaddon Black", l1: "Eshin Grey", l2: "Dawnstone", dry: "Longbeard Grey", sh: "Nuln Oil" },
+    { b: "Abaddon Black", l1: "Dark Reaper", l2: "Thunderhawk Blue", dry: "Stormfang", sh: "Nuln Oil" },
+    { b: "Abaddon Black", l1: "Skavenblight Dinge", l2: "Stormvermin Fur", dry: "Terminatus Stone", sh: "Nuln Oil" },
+    { b: "Leadbelcher", l1: "Ironbreaker", l2: "Runefang Steel", dry: "Necron Compound", sh: "Nuln Oil" },
+    { b: "Balthasar Gold", l1: "Gehenna's Gold", l2: "Auric Armour Gold", dry: "Golden Griffon", sh: "Agrax Earthshade" },
+    { b: "Screaming Bell", l1: "Hashut Copper", l2: "Sycorax Bronze", dry: "Golden Griffon", sh: "Reikland Fleshshade" },
+    { b: "Warplock Bronze", l1: "Brass Scorpion", l2: "Runelord Brass", dry: "Golden Griffon", sh: "Agrax Earthshade" }
+  ];
+  var rFilter = "have", rQuery = "";
+  function nameKey(s) { return String(s == null ? "" : s).toLowerCase().replace(/[^a-z0-9]/g, ""); }
 
   var data = {};          // {Base: [rows], ...}   rows: {id,nom,prix,metal,have,idx}
   var active = "dash";    // "dash" | table id
@@ -308,6 +387,7 @@
   /* ---------- render tabs ---------- */
   function renderTabs() {
     var html = '<button class="tab dash' + (active === "dash" ? " on" : "") + '" data-v="dash">Tableau de bord</button>';
+    html += '<button class="tab' + (active === "recipes" ? " on" : "") + '" data-v="recipes">Recettes</button>';
     html += TYPES.map(function (t) {
       var s = statsOf(t.id);
       return '<button class="tab' + (active === t.id ? " on" : "") + '" data-v="' + t.id + '">' +
@@ -379,13 +459,72 @@
     }).join("");
   }
 
+  /* ---------- render recettes ---------- */
+  function buildIndex() {
+    // clé nom normalisée -> true (détenu) / false (présent, pas détenu)
+    var idx = {};
+    TYPES.forEach(function (t) { (data[t.id] || []).forEach(function (r) { idx[nameKey(r.nom)] = r.have; }); });
+    return idx;
+  }
+
+  function renderRecipes() {
+    var idx = buildIndex();
+    function st(name) { var k = nameKey(name); return { name: name, has: idx[k] === true, known: (k in idx) }; }
+
+    var q = rQuery.trim().toLowerCase();
+    var enriched = RECIPES.map(function (rc) {
+      var base = st(rc.b), l1 = st(rc.l1), l2 = st(rc.l2), dry = st(rc.dry), sh = st(rc.sh);
+      return { rc: rc, base: base, l1: l1, l2: l2, dry: dry, sh: sh,
+        layOK: l1.has && l2.has, dryOK: dry.has };
+    });
+
+    var baseOwned = enriched.filter(function (e) { return e.base.has; });
+    var readyLay = baseOwned.filter(function (e) { return e.layOK; }).length;
+    var readyDry = baseOwned.filter(function (e) { return e.dryOK; }).length;
+    document.getElementById("rsum").innerHTML =
+      '<b>' + baseOwned.length + '</b> bases détenues · Layering prêt <b>' + readyLay + '</b> · Dry prêt <b>' + readyDry + '</b>';
+
+    var rows = enriched.filter(function (e) {
+      if (rFilter === "have" && !e.base.has) return false;
+      if (rFilter === "ready" && !(e.base.has && e.layOK && e.dryOK)) return false;
+      if (rFilter === "missing" && !(e.base.has && !(e.layOK && e.dryOK))) return false;
+      if (q && e.rc.b.toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    });
+
+    function chip(s) {
+      var cls = s.has ? "ok" : (s.known ? "no" : "unk");
+      var mark = s.has ? "✓" : (s.known ? "✗" : "?");
+      return '<span class="rchip ' + cls + '">' + mark + " " + esc(s.name) + "</span>";
+    }
+
+    var list = document.getElementById("rlist");
+    if (!rows.length) { list.innerHTML = '<div class="empty">Aucune recette pour ce filtre.</div>'; return; }
+    list.innerHTML = rows.map(function (e) {
+      return '<div class="rcard' + (e.base.has ? "" : " dim") + '">' +
+        '<div class="rhead">' +
+          '<span class="rbase">' + esc(e.rc.b) + (e.base.has ? '' : ' <span class="rmini">base non détenue</span>') + '</span>' +
+          '<span class="rtags">' +
+            '<span class="rtag ' + (e.layOK ? "ok" : "no") + '">Layering ' + (e.layOK ? "OK" : "✗") + '</span>' +
+            '<span class="rtag ' + (e.dryOK ? "ok" : "no") + '">Dry ' + (e.dryOK ? "OK" : "✗") + '</span>' +
+          '</span></div>' +
+        '<div class="rrow"><span class="rlbl">Layer</span>' + chip(e.l1) + chip(e.l2) + '</div>' +
+        '<div class="rrow"><span class="rlbl">Dry</span>' + chip(e.dry) + '</div>' +
+        '<div class="rrow"><span class="rlbl">Shade</span>' + chip(e.sh) + '</div>' +
+      '</div>';
+    }).join("");
+  }
+
   /* ---------- master render ---------- */
   function render() {
     renderTabs();
-    var onDash = active === "dash";
-    document.getElementById("view-dash").classList.toggle("hidden", !onDash);
-    document.getElementById("view-gamme").classList.toggle("hidden", onDash);
-    if (onDash) renderDash(); else renderGamme();
+    var view = active === "dash" ? "dash" : (active === "recipes" ? "recipes" : "gamme");
+    document.getElementById("view-dash").classList.toggle("hidden", view !== "dash");
+    document.getElementById("view-recipes").classList.toggle("hidden", view !== "recipes");
+    document.getElementById("view-gamme").classList.toggle("hidden", view !== "gamme");
+    if (view === "dash") renderDash();
+    else if (view === "recipes") renderRecipes();
+    else renderGamme();
 
     var totHave = 0, totAll = 0;
     TYPES.forEach(function (t) { var s = statsOf(t.id); totHave += s.have; totAll += s.total; });
@@ -450,11 +589,19 @@
     var b = e.target.closest(".paint"); if (b) toggle(+b.getAttribute("data-id"));
   });
   document.getElementById("q").addEventListener("input", function (e) { query = e.target.value; renderGamme(); });
-  document.querySelector(".chips").addEventListener("click", function (e) {
+  document.getElementById("view-gamme").querySelector(".chips").addEventListener("click", function (e) {
     var c = e.target.closest(".chip"); if (!c) return;
     filter = c.getAttribute("data-f");
-    document.querySelectorAll(".chip").forEach(function (x) { x.classList.toggle("on", x === c); });
+    c.parentNode.querySelectorAll(".chip").forEach(function (x) { x.classList.toggle("on", x === c); });
     renderGamme();
+  });
+
+  document.getElementById("rq").addEventListener("input", function (e) { rQuery = e.target.value; renderRecipes(); });
+  document.getElementById("view-recipes").querySelector(".chips").addEventListener("click", function (e) {
+    var c = e.target.closest(".chip"); if (!c) return;
+    rFilter = c.getAttribute("data-rf");
+    c.parentNode.querySelectorAll(".chip").forEach(function (x) { x.classList.toggle("on", x === c); });
+    renderRecipes();
   });
   document.getElementById("refresh").addEventListener("click", function () { if (window.grist && grist.docApi) fetchAll(); else render(); });
 
@@ -483,7 +630,7 @@
   /* ---------- boot ---------- */
   if (DEMO) {
     demo();
-    var m = location.search.match(/[?&]v=([A-Za-z]+)/); if (m && (m[1] === "dash" || COLOR[m[1]])) { active = m[1]; render(); }
+    var m = location.search.match(/[?&]v=([A-Za-z]+)/); if (m && (m[1] === "dash" || m[1] === "recipes" || COLOR[m[1]])) { active = m[1]; render(); }
   } else if (window.grist && grist.ready) {
     grist.ready({ requiredAccess: "full" });
     fetchAll();
