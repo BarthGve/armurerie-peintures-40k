@@ -264,10 +264,23 @@
   function detenu(n) { return n < 2 ? "détenu" : "détenus"; }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 
-  function normalize(rows) {
-    return rows.map(function (r) {
-      return { id: r.id, nom: r.Nom_du_pot || "", prix: +r.Prix_ || 0, metal: truthy(r.Metallique), have: truthy(r.Possede_x_), idx: r.A != null ? r.A : 0 };
-    }).sort(function (a, b) { return (a.idx || 0) - (b.idx || 0); });
+  function normalize(tbl) {
+    var out;
+    if (Array.isArray(tbl)) {
+      // format lignes (démo / onRecords)
+      out = tbl.map(function (r) {
+        return { id: r.id, nom: r.Nom_du_pot || "", prix: +r.Prix_ || 0, metal: truthy(r.Metallique), have: truthy(r.Possede_x_), idx: r.A != null ? r.A : 0 };
+      });
+    } else {
+      // format colonnaire (grist.docApi.fetchTable) : { id:[...], Prix_:[...], ... }
+      var ids = (tbl && tbl.id) || [], nom = tbl.Nom_du_pot || [], prix = tbl.Prix_ || [],
+          metal = tbl.Metallique || [], poss = tbl.Possede_x_ || [], a = tbl.A || [];
+      out = [];
+      for (var i = 0; i < ids.length; i++) {
+        out.push({ id: ids[i], nom: nom[i] || "", prix: +prix[i] || 0, metal: truthy(metal[i]), have: truthy(poss[i]), idx: a[i] != null ? a[i] : 0 });
+      }
+    }
+    return out.sort(function (x, y) { return (x.idx || 0) - (y.idx || 0); });
   }
 
   function statsOf(id) {
