@@ -280,7 +280,7 @@
         out.push({ id: ids[i], nom: nom[i] || "", prix: +prix[i] || 0, metal: truthy(metal[i]), have: truthy(poss[i]), idx: a[i] != null ? a[i] : 0 });
       }
     }
-    return out.sort(function (x, y) { return (x.idx || 0) - (y.idx || 0); });
+    return out.sort(function (x, y) { return x.nom.localeCompare(y.nom, "fr"); });
   }
 
   function statsOf(id) {
@@ -373,7 +373,7 @@
     if (!vis.length) { list.innerHTML = '<div class="empty">Aucun pot ne correspond.</div>'; return; }
     list.innerHTML = vis.map(function (r) {
       return '<button class="paint' + (r.have ? " have" : "") + '" data-id="' + r.id + '" type="button" aria-pressed="' + r.have + '">' +
-        '<span class="idx">' + esc(r.idx) + '</span><span class="body"><span class="nm">' + esc(r.nom) + '</span>' +
+        '<span class="body"><span class="nm">' + esc(r.nom) + '</span>' +
         '<span class="meta"><span class="price">' + eur2(r.prix) + '</span>' + (r.metal ? '<span class="badge-metal">Métallique</span>' : '') + '</span></span>' +
         '<span class="sw" aria-hidden="true"></span></button>';
     }).join("");
