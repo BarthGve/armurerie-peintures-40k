@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Armurerie — Peintures Citadel 40K</title>
+<style>
+  :root {
+    --bg: #0b0d10;
+    --panel: #14171d;
+    --panel-2: #191d25;
+    --line: #2b313c;
+    --line-hot: #3c4452;
+    --bone: #e9e3d2;
+    --bone-dim: #9aa0ab;
+    --muted: #6b7280;
+    --gold: #d4af37;
+    --gold-dim: #a8873a;
+    --green: #5bbf6a;
+    --green-dim: #3f8f4a;
+    --track: #232833;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background:
+      radial-gradient(1200px 500px at 50% -10%, #1a1f28 0%, transparent 60%),
+      radial-gradient(800px 400px at 90% 110%, #14100c 0%, transparent 55%),
+      var(--bg);
+    color: var(--bone);
+    font-family: "Oswald", "Bahnschrift", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 18px 16px 28px;
+    min-height: 100%;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  /* header */
+  header { text-align: center; margin-bottom: 14px; position: relative; }
+  header::before, header::after { content: ""; position: absolute; top: 50%; width: 18%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dim)); }
+  header::before { left: 6%; }
+  header::after { right: 6%; transform: scaleX(-1); }
+  .kicker { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); font-weight: 600; }
+  h1 { font-size: 25px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; margin: 4px 0 2px; }
+  .sub { font-size: 12px; letter-spacing: 1px; color: var(--bone-dim); }
+
+  /* ---- Tabs ---- */
+  .tabs { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--line); margin-bottom: 16px; padding-bottom: 0; scrollbar-width: thin; }
+  .tab {
+    background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--bone-dim);
+    font: inherit; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600;
+    padding: 10px 13px 9px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 7px;
+    transition: color .15s, border-color .15s;
+  }
+  .tab:hover { color: var(--bone); }
+  .tab.on { color: var(--bone); border-bottom-color: var(--gold); }
+  .tab.dash.on { border-bottom-color: var(--gold); }
+  .tab .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .tab i { font-style: normal; font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: .5px; }
+  .tab.on i { color: var(--green); }
+
+  .panel {
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line); border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.03);
+  }
+
+  /* ======= DASHBOARD ======= */
+  .cols { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+  .col-left  { flex: 1 1 440px; min-width: 300px; }
+  .col-right { flex: 1 1 360px; min-width: 300px; }
+
+  .hero { border-top: 2px solid var(--gold-dim); padding: 16px 14px 6px; margin-bottom: 16px; }
+  .cap { text-align: center; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 2px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 12px; }
+  .card { padding: 10px 6px 8px; text-align: center; transition: border-color .2s, transform .2s; }
+  .card:hover { border-color: var(--line-hot); transform: translateY(-2px); }
+  .card .name { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-top: 2px; }
+  .card .frac { font-size: 11px; color: var(--bone-dim); margin-top: 1px; }
+
+  .gauge { position: relative; width: 100%; }
+  .gauge svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .gauge .center { position: absolute; left: 0; right: 0; bottom: 6%; text-align: center; pointer-events: none; }
+  .gauge .pct { font-size: 30px; font-weight: 700; line-height: 1; letter-spacing: 1px; }
+  .gauge .pct.small { font-size: 21px; }
+  .gauge .pct small { font-size: .5em; opacity: .7; }
+  .gauge .lbl { font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
+  .arc-val { transition: stroke-dashoffset .9s cubic-bezier(.22,1,.36,1); }
+
+  .fin { padding: 16px 16px 18px; border-top: 2px solid var(--gold-dim); }
+  .fin h2 { font-size: 20px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin: 2px 0; }
+  .fin-head { text-align: center; margin-bottom: 16px; }
+  .ledger { border-top: 1px solid var(--line); }
+  .ledger .row { display: flex; justify-content: space-between; align-items: baseline; padding: 11px 2px; border-bottom: 1px solid var(--line); }
+  .ledger .row .k { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--bone-dim); }
+  .ledger .row .v { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: .5px; }
+  .ledger .row.owned .v { color: var(--green); }
+  .ledger .row.reste .v { color: var(--gold); }
+  .ledger .row.total { border-bottom: none; }
+  .ledger .row.total .k { color: var(--bone); }
+  .ledger .row.total .v { color: var(--bone); font-size: 21px; }
+
+  .info { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; margin-left: 6px; border-radius: 50%; border: 1px solid var(--gold-dim); color: var(--gold); font-size: 9px; font-weight: 700; font-style: normal; line-height: 1; cursor: help; vertical-align: middle; outline: none; }
+  .info .tip { position: absolute; bottom: calc(100% + 9px); left: 50%; transform: translateX(-50%) translateY(4px); width: 190px; background: #10141a; border: 1px solid var(--line-hot); border-radius: 6px; padding: 9px 11px; font-size: 11px; line-height: 1.45; font-weight: 400; letter-spacing: normal; text-transform: none; text-align: left; color: var(--bone-dim); box-shadow: 0 8px 22px rgba(0,0,0,.6); opacity: 0; visibility: hidden; transition: opacity .15s, transform .15s; z-index: 20; }
+  .info .tip b { color: var(--gold); font-weight: 700; }
+  .info .tip::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--line-hot); }
+  .info:hover .tip, .info:focus .tip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+  .budget { margin: 16px 0 6px; }
+  .budget .top { display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--bone-dim); margin-bottom: 6px; }
+  .budget .top b { color: var(--green); font-weight: 700; }
+  .bar { height: 12px; border-radius: 6px; background: var(--track); overflow: hidden; border: 1px solid var(--line); }
+  .bar > span { display: block; height: 100%; border-radius: 6px 0 0 6px; background: linear-gradient(90deg, var(--green-dim), var(--green)); box-shadow: 0 0 10px rgba(91,191,106,.5); width: 0; transition: width .9s cubic-bezier(.22,1,.36,1); }
+
+  .break { margin-top: 18px; }
+  .break .h { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 8px; }
+  .brow { display: grid; grid-template-columns: 74px 1fr auto; gap: 8px; align-items: center; padding: 6px 0; }
+  .brow .bn { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+  .brow .bdot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .brow .mini { height: 7px; border-radius: 4px; background: var(--track); overflow: hidden; }
+  .brow .mini > span { display: block; height: 100%; width: 0; transition: width .9s cubic-bezier(.22,1,.36,1); border-radius: 4px; }
+  .brow .be { font-size: 11px; font-variant-numeric: tabular-nums; color: var(--bone-dim); white-space: nowrap; }
+  .brow .be b { color: var(--green); font-weight: 600; }
+
+  /* ======= DECLARATION ======= */
+  .toolbar { display: flex; gap: 8px; margin: 0 0 12px; flex-wrap: wrap; }
+  .search { flex: 1; min-width: 160px; position: relative; }
+  .search input { width: 100%; background: var(--panel); border: 1px solid var(--line); color: var(--bone); font: inherit; font-size: 14px; letter-spacing: .5px; padding: 9px 12px 9px 34px; border-radius: 6px; outline: none; }
+  .search input::placeholder { color: var(--muted); }
+  .search input:focus { border-color: var(--gold-dim); }
+  .search .ico { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; }
+  .chips { display: flex; gap: 6px; }
+  .chip { background: var(--panel); color: var(--bone-dim); border: 1px solid var(--line); font: inherit; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all .15s; }
+  .chip:hover { border-color: var(--line-hot); color: var(--bone); }
+  .chip.on { background: var(--gold); color: #14100c; border-color: var(--gold); font-weight: 700; }
+
+  .declhead { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .declhead .bar { flex: 1; }
+  .declhead .txt { font-size: 12px; letter-spacing: 1px; color: var(--bone-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .declhead .txt b { color: var(--green); font-weight: 700; }
+
+  .list { display: flex; flex-direction: column; gap: 7px; }
+  .paint { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--line); border-left: 3px solid var(--line); border-radius: 6px; padding: 11px 12px; cursor: pointer; font: inherit; color: inherit; transition: border-color .15s, background .15s, transform .08s; }
+  .paint:hover { border-color: var(--line-hot); }
+  .paint:active { transform: scale(.995); }
+  .paint.have { border-left-color: var(--green); background: linear-gradient(180deg, #16211a, #12191a); }
+  .paint .idx { font-size: 11px; color: var(--muted); width: 26px; flex: none; font-variant-numeric: tabular-nums; text-align: right; }
+  .paint .body { flex: 1; min-width: 0; }
+  .paint .nm { font-size: 15px; letter-spacing: .5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .paint.have .nm { color: var(--green); }
+  .paint .meta { font-size: 11px; color: var(--bone-dim); letter-spacing: .5px; margin-top: 2px; display: flex; align-items: center; gap: 8px; }
+  .paint .price { font-variant-numeric: tabular-nums; }
+  .badge-metal { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; padding: 1px 6px; border-radius: 3px; color: #1a1206; font-weight: 700; background: linear-gradient(135deg, #d9c27a, #b8952f, #f2e2a0); }
+  .sw { flex: none; width: 46px; height: 26px; border-radius: 13px; background: var(--track); border: 1px solid var(--line-hot); position: relative; transition: background .2s, border-color .2s; }
+  .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--bone-dim); transition: transform .2s, background .2s; }
+  .paint.have .sw { background: var(--green-dim); border-color: var(--green); }
+  .paint.have .sw::after { transform: translateX(20px); background: #eafff0; }
+  .empty { text-align: center; color: var(--muted); font-size: 13px; letter-spacing: 1px; padding: 30px 0; }
+
+  .hidden { display: none !important; }
+
+  .banner { margin: 0 0 14px; padding: 11px 14px; border-radius: 6px; border: 1px solid #6b4f1a;
+    background: #241b0c; color: #f0d878; font-size: 13px; letter-spacing: .5px; line-height: 1.5; }
+  .banner b { color: var(--gold); }
+
+  footer { margin-top: 22px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+  .totline { font-size: 12px; letter-spacing: 1px; color: var(--bone-dim); }
+  .totline b { color: var(--gold); font-weight: 600; }
+  button.refresh { background: transparent; color: var(--gold); border: 1px solid var(--gold-dim); font: inherit; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 6px 14px; border-radius: 4px; cursor: pointer; transition: all .15s; }
+  button.refresh:hover { background: var(--gold); color: #14100c; }
+  .stamp { font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Adeptus Custodes du Pinceau</div>
+    <h1>Armurerie des Peintures</h1>
+    <div class="sub">Citadel Colour · poste de commandement</div>
+  </header>
+
+  <div id="banner" class="banner hidden"></div>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <!-- ===== DASHBOARD VIEW ===== -->
+  <div id="view-dash">
+    <div class="cols">
+      <section class="col-left">
+        <div class="panel hero"><div class="cap">Réserve totale</div><div id="global"></div></div>
+        <div class="grid" id="grid"></div>
+      </section>
+      <section class="col-right">
+        <div class="panel fin">
+          <div class="fin-head">
+            <div class="kicker">Trésor de guerre</div>
+            <h2>Bilan financier</h2>
+            <div class="sub">myhobby.place · remise −20 %</div>
+          </div>
+          <div class="ledger" id="ledger"></div>
+          <div class="budget">
+            <div class="top"><span>Trésor acquis</span><b id="bud-pct">0 %</b></div>
+            <div class="bar"><span id="bud-bar"></span></div>
+          </div>
+          <div class="break"><div class="h">Détail par gamme</div><div id="break"></div></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ===== DECLARATION VIEW ===== -->
+  <div id="view-gamme" class="hidden">
+    <div class="declhead">
+      <div class="bar"><span id="d-bar"></span></div>
+      <div class="txt"><b id="d-have">0</b> / <span id="d-all">0</span> · <span id="d-pct">0 %</span></div>
+    </div>
+    <div class="toolbar">
+      <div class="search"><span class="ico">⌕</span><input id="q" type="search" placeholder="Rechercher un pot…" aria-label="Rechercher un pot" /></div>
+      <div class="chips">
+        <button class="chip on" data-f="all" type="button">Tous</button>
+        <button class="chip" data-f="have" type="button">Détenus</button>
+        <button class="chip" data-f="missing" type="button">À acquérir</button>
+      </div>
+    </div>
+    <div class="list" id="list"></div>
+  </div>
+
+  <footer>
+    <div class="totline"><span id="t-word">Détenus</span> <b id="t-have">0</b> / <b id="t-all">0</b> pots</div>
+    <button class="refresh" id="refresh" type="button">↻ Actualiser</button>
+    <div class="stamp" id="stamp"></div>
+  </footer>
+</div>
+
+<script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var TYPES = [
+    { id: "Base",      label: "Base",      c1: "#5a8bb0", c2: "#7fb3d6" },
+    { id: "Layer",     label: "Layer",     c1: "#2f9e8f", c2: "#4fd0be" },
+    { id: "Wash",      label: "Wash",      c1: "#6a4fa0", c2: "#9a7fd0" },
+    { id: "Contrast",  label: "Contrast",  c1: "#b0322b", c2: "#e05a4a" },
+    { id: "Dry",       label: "Dry",       c1: "#b3893f", c2: "#e0c07a" },
+    { id: "Technical", label: "Technical", c1: "#5a9e3f", c2: "#8fd066" }
+  ];
+  var GOLD1 = "#a8873a", GOLD2 = "#f0d878";
+  var COLOR = {}; TYPES.forEach(function (t) { COLOR[t.id] = t; });
+
+  var data = {};          // {Base: [rows], ...}   rows: {id,nom,prix,metal,have,idx}
+  var active = "dash";    // "dash" | table id
+  var filter = "all";
+  var query = "";
+  var updating = {};      // key "table:id" -> true
+  var DEMO = /[?&]demo=1\b/.test(location.search);
+
+  var R = 85, CX = 100, CY = 110, ARC_LEN = Math.PI * R;
+  function arcPath() { return "M " + (CX - R) + " " + CY + " A " + R + " " + R + " 0 0 1 " + (CX + R) + " " + CY; }
+  function eur(v) { return (v || 0).toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " €"; }
+  function eur2(v) { return (v || 0).toFixed(2).replace(".", ",") + " €"; }
+  function truthy(v) { return v === true || v === 1 || v === "true"; }
+  function detenu(n) { return n < 2 ? "détenu" : "détenus"; }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function normalize(rows) {
+    return rows.map(function (r) {
+      return { id: r.id, nom: r.Nom_du_pot || "", prix: +r.Prix_ || 0, metal: truthy(r.Metallique), have: truthy(r.Possede_x_), idx: r.A != null ? r.A : 0 };
+    }).sort(function (a, b) { return (a.idx || 0) - (b.idx || 0); });
+  }
+
+  function statsOf(id) {
+    var rows = data[id] || [], have = 0, ownedVal = 0, totalVal = 0;
+    rows.forEach(function (r) { totalVal += r.prix; if (r.have) { have++; ownedVal += r.prix; } });
+    return { have: have, total: rows.length, ownedVal: ownedVal, totalVal: totalVal };
+  }
+
+  /* ---------- gauges ---------- */
+  var uid = 0;
+  function gauge(o) {
+    var pct = o.total > 0 ? o.have / o.total : 0, pctInt = Math.round(pct * 100), gid = "g" + (uid++), sw = o.big ? 16 : 13;
+    return '<div class="gauge"><svg viewBox="0 0 200 128" role="img" aria-label="' + pctInt + ' pour cent">' +
+      '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="' + o.c1 + '"/><stop offset="1" stop-color="' + o.c2 + '"/></linearGradient>' +
+      '<filter id="f' + gid + '"><feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="' + o.c2 + '" flood-opacity="0.55"/></filter></defs>' +
+      '<path d="' + arcPath() + '" fill="none" stroke="var(--track)" stroke-width="' + sw + '" stroke-linecap="round"/>' +
+      '<path class="arc-val" d="' + arcPath() + '" fill="none" stroke="url(#' + gid + ')" stroke-width="' + sw + '" stroke-linecap="round" filter="url(#f' + gid + ')" stroke-dasharray="' + ARC_LEN + ' ' + (ARC_LEN + 20) + '" stroke-dashoffset="' + ARC_LEN + '" data-target="' + (ARC_LEN * (1 - pct)) + '"/></svg>' +
+      '<div class="center"><div class="pct' + (o.big ? '' : ' small') + '">' + pctInt + '<small>%</small></div><div class="lbl">' + o.have + ' / ' + o.total + '</div></div></div>';
+  }
+  function animateArcs() {
+    document.body.offsetHeight;
+    document.querySelectorAll(".arc-val").forEach(function (a) { a.style.strokeDashoffset = a.getAttribute("data-target"); });
+  }
+
+  /* ---------- render tabs ---------- */
+  function renderTabs() {
+    var html = '<button class="tab dash' + (active === "dash" ? " on" : "") + '" data-v="dash">Tableau de bord</button>';
+    html += TYPES.map(function (t) {
+      var s = statsOf(t.id);
+      return '<button class="tab' + (active === t.id ? " on" : "") + '" data-v="' + t.id + '">' +
+        '<span class="dot" style="background:' + t.c2 + '"></span>' + t.label + ' <i>' + s.have + '/' + s.total + '</i></button>';
+    }).join("");
+    document.getElementById("tabs").innerHTML = html;
+  }
+
+  /* ---------- render dashboard ---------- */
+  function renderDash() {
+    var totHave = 0, totAll = 0, valOwned = 0, valAll = 0;
+    TYPES.forEach(function (t) { var s = statsOf(t.id); totHave += s.have; totAll += s.total; valOwned += s.ownedVal; valAll += s.totalVal; });
+    var reste = valAll - valOwned, budPct = valAll > 0 ? Math.round(valOwned / valAll * 100) : 0;
+
+    document.getElementById("global").innerHTML = gauge({ have: totHave, total: totAll, c1: GOLD1, c2: GOLD2, big: true });
+    document.getElementById("grid").innerHTML = TYPES.map(function (t) {
+      var s = statsOf(t.id);
+      return '<div class="panel card">' + gauge({ have: s.have, total: s.total, c1: t.c1, c2: t.c2, big: false }) +
+        '<div class="name" style="color:' + t.c2 + '">' + t.label + '</div><div class="frac">' + s.have + ' ' + detenu(s.have) + '</div></div>';
+    }).join("");
+
+    document.getElementById("ledger").innerHTML =
+      '<div class="row owned"><span class="k">Valeur détenue</span><span class="v">' + eur(valOwned) + '</span></div>' +
+      '<div class="row reste"><span class="k">Reste à acquérir</span><span class="v">' + eur(reste) + '</span></div>' +
+      '<div class="row total"><span class="k">Coût gamme complète' +
+        '<span class="info" tabindex="0" role="note" aria-label="Prix basés sur le site myhobby.place, remise de 20 pour cent">i' +
+          '<span class="tip">Prix basés sur le site <b>myhobby.place</b> (remise&nbsp;−20&nbsp;%).</span></span></span>' +
+        '<span class="v">' + eur(valAll) + '</span></div>';
+
+    document.getElementById("bud-pct").textContent = budPct + " %";
+    document.getElementById("bud-bar").style.width = budPct + "%";
+    document.getElementById("break").innerHTML = TYPES.map(function (t) {
+      var s = statsOf(t.id), p = s.totalVal > 0 ? s.ownedVal / s.totalVal * 100 : 0;
+      return '<div class="brow"><span class="bn"><span class="bdot" style="background:' + t.c2 + '"></span>' + t.label + '</span>' +
+        '<span class="mini"><span style="width:' + p + '%;background:' + t.c2 + '"></span></span>' +
+        '<span class="be"><b>' + eur(s.ownedVal) + '</b> / ' + eur(s.totalVal) + '</span></div>';
+    }).join("");
+
+    requestAnimationFrame(function () {
+      animateArcs();
+      document.getElementById("bud-bar").style.width = budPct + "%";
+      document.querySelectorAll(".brow .mini > span").forEach(function (el) { var w = el.style.width; el.style.width = "0"; el.offsetHeight; el.style.width = w; });
+    });
+  }
+
+  /* ---------- render declaration ---------- */
+  function renderGamme() {
+    var rows = (data[active] || []);
+    var have = rows.filter(function (r) { return r.have; }).length, all = rows.length, pct = all ? Math.round(have / all * 100) : 0;
+    document.getElementById("d-have").textContent = have;
+    document.getElementById("d-all").textContent = all;
+    document.getElementById("d-pct").textContent = pct + " %";
+    document.getElementById("d-bar").style.width = pct + "%";
+
+    var q = query.trim().toLowerCase();
+    var vis = rows.filter(function (r) {
+      if (filter === "have" && !r.have) return false;
+      if (filter === "missing" && r.have) return false;
+      if (q && r.nom.toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    });
+    var list = document.getElementById("list");
+    if (!vis.length) { list.innerHTML = '<div class="empty">Aucun pot ne correspond.</div>'; return; }
+    list.innerHTML = vis.map(function (r) {
+      return '<button class="paint' + (r.have ? " have" : "") + '" data-id="' + r.id + '" type="button" aria-pressed="' + r.have + '">' +
+        '<span class="idx">' + esc(r.idx) + '</span><span class="body"><span class="nm">' + esc(r.nom) + '</span>' +
+        '<span class="meta"><span class="price">' + eur2(r.prix) + '</span>' + (r.metal ? '<span class="badge-metal">Métallique</span>' : '') + '</span></span>' +
+        '<span class="sw" aria-hidden="true"></span></button>';
+    }).join("");
+  }
+
+  /* ---------- master render ---------- */
+  function render() {
+    renderTabs();
+    var onDash = active === "dash";
+    document.getElementById("view-dash").classList.toggle("hidden", !onDash);
+    document.getElementById("view-gamme").classList.toggle("hidden", onDash);
+    if (onDash) renderDash(); else renderGamme();
+
+    var totHave = 0, totAll = 0;
+    TYPES.forEach(function (t) { var s = statsOf(t.id); totHave += s.have; totAll += s.total; });
+    var w = detenu(totHave);
+    document.getElementById("t-word").textContent = w.charAt(0).toUpperCase() + w.slice(1);
+    document.getElementById("t-have").textContent = totHave;
+    document.getElementById("t-all").textContent = totAll;
+  }
+
+  /* ---------- data ---------- */
+  function banner(msg) {
+    var el = document.getElementById("banner");
+    if (!msg) { el.classList.add("hidden"); el.innerHTML = ""; return; }
+    el.innerHTML = msg; el.classList.remove("hidden");
+  }
+
+  var lastKey = "", fetching = false;
+  async function fetchAll() {
+    if (fetching) return;            // évite les appels qui se chevauchent
+    fetching = true;
+    var okCount = 0, lastErr = null;
+    try {
+      for (var i = 0; i < TYPES.length; i++) {
+        try { data[TYPES[i].id] = normalize(await grist.docApi.fetchTable(TYPES[i].id)); okCount++; }
+        catch (e) { lastErr = e; data[TYPES[i].id] = data[TYPES[i].id] || []; }
+      }
+    } finally { fetching = false; }
+    if (okCount === 0) {
+      console.error("[Armurerie] Lecture des tables impossible :", lastErr);
+      banner('<b>Accès aux données refusé.</b> Ajoute ce widget en <b>« Custom URL »</b> (pas via « Custom widget builder ») puis règle l\'accès sur <b>« Accès complet au document »</b>.');
+    } else {
+      banner("");
+    }
+    var key = JSON.stringify(TYPES.map(function (t) { return statsOf(t.id); }));
+    if (key !== lastKey) { lastKey = key; render(); }
+    stamp();
+  }
+
+  function toggle(id) {
+    var table = active; if (table === "dash") return;
+    var rows = data[table] || [], r = rows.find(function (x) { return x.id === id; });
+    var key = table + ":" + id;
+    if (!r || updating[key]) return;
+    var next = !r.have;
+    r.have = next; updating[key] = true;      // optimistic
+    render();
+    if (!DEMO && window.grist && grist.docApi) {
+      grist.docApi.applyUserActions([["UpdateRecord", table, id, { Possede_x_: next }]])
+        .then(function () { delete updating[key]; })
+        .catch(function () { r.have = !next; delete updating[key]; render(); });
+    } else { delete updating[key]; }
+    stamp();
+  }
+
+  /* ---------- events ---------- */
+  document.getElementById("tabs").addEventListener("click", function (e) {
+    var t = e.target.closest(".tab"); if (!t) return;
+    active = t.getAttribute("data-v");
+    render();
+  });
+  document.getElementById("list").addEventListener("click", function (e) {
+    var b = e.target.closest(".paint"); if (b) toggle(+b.getAttribute("data-id"));
+  });
+  document.getElementById("q").addEventListener("input", function (e) { query = e.target.value; renderGamme(); });
+  document.querySelector(".chips").addEventListener("click", function (e) {
+    var c = e.target.closest(".chip"); if (!c) return;
+    filter = c.getAttribute("data-f");
+    document.querySelectorAll(".chip").forEach(function (x) { x.classList.toggle("on", x === c); });
+    renderGamme();
+  });
+  document.getElementById("refresh").addEventListener("click", function () { if (window.grist && grist.docApi) fetchAll(); else render(); });
+
+  function stamp() {
+    var d = new Date(), p = function (n) { return (n < 10 ? "0" : "") + n; };
+    document.getElementById("stamp").textContent = "MAJ " + p(d.getHours()) + ":" + p(d.getMinutes()) + ":" + p(d.getSeconds());
+  }
+
+  /* ---------- demo ---------- */
+  function demo() {
+    function pots(prefix, n, price, ownedN) {
+      var a = [];
+      for (var i = 1; i <= n; i++) a.push({ id: i, A: i, Nom_du_pot: prefix + " " + i, Prix_: price, Possede_x_: i <= ownedN, Metallique: (i % 9 === 0) });
+      return a;
+    }
+    data.Base = normalize(pots("Base", 57, 2.88, 12));
+    data.Layer = normalize(pots("Layer", 93, 2.88, 20));
+    data.Wash = normalize(pots("Wash", 19, 5.04, 7));
+    data.Contrast = normalize(pots("Contrast", 61, 5.04, 15));
+    data.Dry = normalize(pots("Dry", 24, 2.88, 3));
+    data.Technical = normalize(pots("Technical", 22, 4.34, 5));
+    render();
+    document.getElementById("stamp").textContent = "APERÇU (hors Grist)";
+  }
+
+  /* ---------- boot ---------- */
+  if (DEMO) {
+    demo();
+    var m = location.search.match(/[?&]v=([A-Za-z]+)/); if (m && (m[1] === "dash" || COLOR[m[1]])) { active = m[1]; render(); }
+  } else if (window.grist && grist.ready) {
+    grist.ready({ requiredAccess: "full" });
+    fetchAll();
+    setInterval(fetchAll, 10000);
+    window.addEventListener("focus", fetchAll);
+  } else {
+    demo();
+  }
+})();
+</script>
+</body>
+</html>
