@@ -383,6 +383,36 @@
     drakenhofnightshade:"#1f2f52", coeliagreenshade:"#12463f", bieltangreen:"#16463a",
     athoniancamoshade:"#5c5f2a", seraphimsepia:"#9a7038", agraxearthshade:"#3a2a1e"
   };
+  // HEX précis (redgrimm/paint-conversion) par nom normalisé — Base/Layer.
+  var PAINTHEX = {
+    abaddonblack:"#010100", administratumgrey:"#9da299", ahrimanblue:"#1f8c9c", alaitocblue:"#2e5689",
+    altdorfguardblue:"#274b9b", averlandsunset:"#fbba00", baharrothblue:"#58c1cd", balorbrown:"#915e02",
+    banebladebrown:"#99826b", bestigorflesh:"#d38a57", bluehorror:"#a2bad2", bugmansglow:"#8c5144",
+    cadianfleshtone:"#cb7953", caledorsky:"#38689c", calgarblue:"#456eb5", calibangreen:"#003b1d",
+    castellangreen:"#384d20", celestragrey:"#9caeae", ceramitewhite:"#ffffff", daemonettehide:"#696685",
+    darkreaper:"#3b5150", dawnstone:"#7b7e74", deathclawbrown:"#ba6952", deathguardarmor:"#848a66",
+    deathworldforest:"#666c2d", dechalalilac:"#b69fcc", doombullbrown:"#5e0605", dornyellow:"#fff200",
+    dryadbark:"#3b342e", elysiangreen:"#81932e", emperorschildren:"#bd3f75", eshingrey:"#535659",
+    evilsunsscarlet:"#c00b0c", fenrisiangrey:"#789ebb", firedragonbright:"#f1844a", flashgitzyellow:"#ffee00",
+    flayedoneflesh:"#f3ca8a", fulgrimpink:"#f4afcd", gaussblastergreen:"#84c3aa", genestealerpurple:"#7c5ca4",
+    gorthorbrown:"#6e4e46", hoethblue:"#4f7fb5", incubidarkness:"#094345", jokaeroorange:"#e6200f",
+    kabalitegreen:"#008660", kantorblue:"#06234f", karakstone:"#c1a069", khornered:"#6a0a01",
+    kislevflesh:"#dbad75", kriegkhaki:"#c0bd81", lorenforest:"#5b7426", lothernblue:"#3ba1d1",
+    lugganathorange:"#f79e86", macraggeblue:"#14397a", mechanicusstandardgrey:"#454e50",
+    mephistonred:"#9b0e05", mootgreen:"#57aa2d", mournfangbrown:"#681104", naggarothnight:"#433656",
+    nurglinggreen:"#90a15f", ogryncamo:"#a9af42", pallidwychflesh:"#d6d5c4", pinkhorror:"#96325c",
+    rakarthflesh:"#aba495", ratskinflesh:"#ad6b4c", rhinoxhide:"#4e3433", russgrey:"#55768a",
+    screamerpink:"#831740", screamingskull:"#d9d8a6", skarsnikgreen:"#5e9067", skavenblightdinge:"#4f4840",
+    skragbrown:"#954b00", slaaneshgrey:"#8e8c97", sotekgreen:"#056976", squigorange:"#b04d3e",
+    steellegiondrab:"#695634", stegadonscalegreen:"#004261", stormverminfur:"#7d736a", strakengreen:"#6e8611",
+    sybaritegreen:"#36a062", tallarnsand:"#ab7d00", taulightochre:"#c26e02", teclisblue:"#387bbf",
+    templeguardblue:"#35998e", thefang:"#457479", thousandsonsblue:"#18abcc", thunderhawkblue:"#417074",
+    trollslayerorange:"#eb641b", tuskgorfur:"#8e3734", ulthuangrey:"#d2e4df", ungorflesh:"#dbac63",
+    ushabtibone:"#c6c180", waaaghflesh:"#275627", warbossgreen:"#3b7d54", warpfiendgrey:"#6b6a74",
+    warpstoneglow:"#257326", wazdakkared:"#8d0d01", whitescar:"#ffffff", wildriderred:"#e21516",
+    xereuspurple:"#4b205c", xv88:"#7b4d1c", yrielyellow:"#ffda00", zamesidesert:"#e0a503",
+    zandridust:"#a89758"
+  };
 
   var data = {};          // {Base: [rows], ...}   rows: {id,nom,prix,metal,have,idx}
   var active = "dash";    // "dash" | table id
@@ -548,9 +578,11 @@
       return true;
     });
 
-    function cell(kind, s, swatch, isBase) {
+    function cell(kind, s, fallback, isBase) {
       var cls = s.has ? "ok" : (s.known ? "no" : "unk");
       var mark = s.has ? "✓" : (s.known ? "✗" : "?");
+      var k = nameKey(s.name);
+      var swatch = PAINTHEX[k] || SHADEHEX[k] || fallback;   // hex précis, sinon encre, sinon échantillon
       return '<div class="rcell ' + cls + (isBase ? " base" : "") + '">' +
         '<span class="rsw" style="background:' + swatch + '"></span>' +
         '<span class="rk">' + kind + '</span>' +
