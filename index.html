@@ -414,6 +414,31 @@
     xereuspurple:"#4b205c", xv88:"#7b4d1c", yrielyellow:"#ffda00", zamesidesert:"#e0a503",
     zandridust:"#a89758"
   };
+  // HEX Contrast + Technical (SimoGecko/CitadelColours, officiels citadelcolour.com; dégradés moyennés).
+  var EXTRAHEX = {
+    aeldariemerald:"#007166", aethermaticblue:"#4194a5", aggarosdunes:"#928551", agrellanbadland:"#a38f72",
+    agrellanearth:"#a38f72", akheliangreen:"#005f77", apothecarywhite:"#c2d4e3", ardcoat:"#ececec",
+    armageddondust:"#ddc037", astrogranite:"#898989", asurmenblue:"#005a94", baalred:"#ca1a26",
+    badmoonyellow:"#fdc70c", basilicanumgrey:"#4c4c4b", blacklegion:"#212122", blacktemplar:"#353534",
+    bloodangelsred:"#9b0e12", bloodforthebloodgod:"#79282c", briarqueenchill:"#6aa8b9",
+    celestiumblue:"#134a86", contrastmedium:"#ececec", creedcamo:"#2e7046", cygorbrown:"#522b28",
+    darkangelsgreen:"#002722", darkoathflesh:"#af756b", doomfiremagenta:"#c90077", dreadfulvisage:"#b6a1b6",
+    fleshtearersred:"#610705", frostheart:"#00547a", fyreslayerflesh:"#8d5d4b", garaghakssewer:"#6e5027",
+    goregruntafur:"#713c14", gryphchargergrey:"#558ba7", gryphhoundorange:"#b2421b", guillimanflesh:"#b1675a",
+    gutrippaflesh:"#548856", hexwraithflame:"#00a237", imperialfist:"#fbad16", ironjawzyellow:"#d5a335",
+    iyandenyellow:"#e69915", karandrasgreen:"#007938", kroxigorscales:"#00798d", lahmianmedium:"#ececec",
+    leviadonblue:"#00162c", leviathanpurple:"#17034c", luxionpurple:"#350f60", magmadrothflame:"#e45726",
+    magospurple:"#94658d", mantiswarriorsgreen:"#5d893d", martianironcrust:"#b5604f",
+    martianironearth:"#b5604f", militarumgreen:"#7b8426", mordantearth:"#312d2e", nazdregyellow:"#936800",
+    nighthauntgloom:"#4c838a", nihilakhoxide:"#66b39a", nurglesrot:"#9d8b16", orkflesh:"#006823",
+    plaguebearerflesh:"#909c52", pylarglacier:"#3aafe4", ratlinggrime:"#66605e", shyishpurple:"#3b2050",
+    sigvaldburgundy:"#6d004e", skeletonhorde:"#beb18d", snakebiteleather:"#83571e", soulstoneblue:"#2b3c69",
+    spacewolvesgrey:"#476c8c", spiritstonered:"#92382a", stirlandmud:"#5c3a06", stormfiend:"#00517d",
+    stormshield:"#ececec", strikingscorpiongreen:"#09803b", talassarblue:"#004f8d",
+    terradonturquoise:"#006b7a", tesseractglow:"#49ad33", typhuscorrosion:"#373a22",
+    ultramarinesblue:"#142c5e", valhallanblizzard:"#f0f0f0", volupuspink:"#71012a", warplightning:"#007234",
+    waystonegreen:"#2a5944", wyldwood:"#513631"
+  };
 
   var data = {};          // {Base: [rows], ...}   rows: {id,nom,prix,metal,have,idx}
   var active = "dash";    // "dash" | table id
@@ -539,7 +564,7 @@
     var list = document.getElementById("list");
     if (!vis.length) { list.innerHTML = '<div class="empty">Aucun pot ne correspond.</div>'; return; }
     list.innerHTML = vis.map(function (r) {
-      var hk = nameKey(r.nom), hx = PAINTHEX[hk] || SHADEHEX[hk];
+      var hk = nameKey(r.nom), hx = PAINTHEX[hk] || EXTRAHEX[hk] || SHADEHEX[hk];
       return '<button class="paint' + (r.have ? " have" : "") + '" data-id="' + r.id + '" type="button" aria-pressed="' + r.have + '">' +
         '<span class="body"><span class="nm">' + esc(r.nom) + '<span class="pdot" style="background:' + (hx || "transparent") + '"></span></span>' +
         '<span class="meta"><span class="price">' + eur2(r.prix) + '</span>' + (r.metal ? '<span class="badge-metal">Métallique</span>' : '') + '</span></span>' +
@@ -584,7 +609,7 @@
       var cls = s.has ? "ok" : (s.known ? "no" : "unk");
       var mark = s.has ? "✓" : (s.known ? "✗" : "?");
       var k = nameKey(s.name);
-      var swatch = PAINTHEX[k] || SHADEHEX[k] || fallback;   // hex précis, sinon encre, sinon échantillon
+      var swatch = PAINTHEX[k] || EXTRAHEX[k] || SHADEHEX[k] || fallback;   // hex précis, sinon encre, sinon échantillon
       return '<div class="rcell ' + cls + (isBase ? " base" : "") + '">' +
         '<span class="rsw" style="background:' + swatch + '"></span>' +
         '<span class="rk">' + kind + '</span>' +
