@@ -168,6 +168,7 @@
   .rcard.dim { opacity: .5; }
   .rstrip { display: grid; grid-template-columns: repeat(6, minmax(92px, 1fr)); gap: 6px; }
   .rcell { border: 1px solid var(--line-hot); border-radius: 6px; padding: 7px 6px; text-align: center; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .rcell .rsw { width: 26px; height: 12px; border-radius: 3px; border: 1px solid rgba(255,255,255,.18); align-self: center; }
   .rcell .rk { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
   .rcell .rn { font-size: 12px; font-weight: 600; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; }
   .rcell .rm { font-size: 13px; font-weight: 700; }
@@ -335,6 +336,54 @@
   var rFilter = "have", rQuery = "";
   function nameKey(s) { return String(s == null ? "" : s).toLowerCase().replace(/[^a-z0-9]/g, ""); }
 
+  // Couleurs échantillonnées sur l'affiche (Base / Layer 1 / Layer 2 / Dry), alignées sur RECIPES.
+  var RSAMPLE = [
+    {l2:"#cccccc",l1:"#cce4e4",b:"#9cb4b4",dry:"#9c9c9c"},
+    {l2:"#e4e4e4",l1:"#cccccc",b:"#b49c9c",dry:"#e4ccb4"},
+    {l2:"#e4cc3c",l1:"#e4cc24",b:"#fcb424",dry:"#fce4cc"},
+    {l2:"#fc846c",l1:"#fcb49c",b:"#fc3c54",dry:"#e4e4cc"},
+    {l2:"#fc5454",l1:"#e43c54",b:"#b43c3c",dry:"#e4cce4"},
+    {l2:"#b46c54",l1:"#9c3c3c",b:"#843c3c",dry:"#e4cce4"},
+    {l2:"#b46c9c",l1:"#9c5484",b:"#9c3c6c",dry:"#e4b4cc"},
+    {l2:"#9c84b4",l1:"#6c5484",b:"#54546c",dry:"#cccce4"},
+    {l2:"#9c9c9c",l1:"#848484",b:"#84849c",dry:"#cccce4"},
+    {l2:"#6c84b4",l1:"#546c9c",b:"#3c546c",dry:"#cccce4"},
+    {l2:"#6c84b4",l1:"#546cb4",b:"#3c549c",dry:"#cccce4"},
+    {l2:"#549ccc",l1:"#6c84cc",b:"#546cb4",dry:"#cccce4"},
+    {l2:"#849cb4",l1:"#6c849c",b:"#548484",dry:"#cccccc"},
+    {l2:"#9ccccc",l1:"#548484",b:"#3c6c84",dry:"#cccccc"},
+    {l2:"#549c6c",l1:"#3c9c84",b:"#3c6c6c",dry:"#cccccc"},
+    {l2:"#84b454",l1:"#548454",b:"#3c6c54",dry:"#cccccc"},
+    {l2:"#849c84",l1:"#6c9c6c",b:"#546c54",dry:"#cce4cc"},
+    {l2:"#849c3c",l1:"#6c8454",b:"#6c6c54",dry:"#cce4cc"},
+    {l2:"#9cb484",l1:"#849c54",b:"#6c6c54",dry:"#cccccc"},
+    {l2:"#b4b46c",l1:"#9c9c6c",b:"#848454",dry:"#cce4cc"},
+    {l2:"#e4e4cc",l1:"#cccc9c",b:"#b49c84",dry:"#e4e4e4"},
+    {l2:"#ccb484",l1:"#cc9c3c",b:"#846c6c",dry:"#e4cccc"},
+    {l2:"#e4b484",l1:"#cc8484",b:"#9c6c6c",dry:"#e4ccb4"},
+    {l2:"#e4b484",l1:"#e49c84",b:"#cc846c",dry:"#e4cccc"},
+    {l2:"#b48484",l1:"#b46c54",b:"#843c3c",dry:"#cccccc"},
+    {l2:"#e4b484",l1:"#cc8454",b:"#9c6c54",dry:"#cccccc"},
+    {l2:"#e4b454",l1:"#b48454",b:"#9c6c54",dry:"#e4e4cc"},
+    {l2:"#9c6c6c",l1:"#843c54",b:"#6c6c6c",dry:"#cccccc"},
+    {l2:"#9c8484",l1:"#846c6c",b:"#6c546c",dry:"#cccccc"},
+    {l2:"#b4b4b4",l1:"#849c9c",b:"#6c6c84",dry:"#b4b4b4"},
+    {l2:"#849c9c",l1:"#6c6c84",b:"#3c3c3c",dry:"#cccccc"},
+    {l2:"#6c849c",l1:"#6c6c84",b:"#3c3c3c",dry:"#cccccc"},
+    {l2:"#848484",l1:"#6c6c6c",b:"#3c3c3c",dry:"#cccccc"},
+    {l2:"#e4e4e4",l1:"#cccccc",b:"#6c6c84",dry:"#b4b4b4"},
+    {l2:"#e4e4e4",l1:"#e4cccc",b:"#9c6c54",dry:"#cccccc"},
+    {l2:"#e4cccc",l1:"#ccb49c",b:"#cc846c",dry:"#e4cccc"},
+    {l2:"#cccccc",l1:"#cc9c84",b:"#9c8484",dry:"#cccccc"}
+  ];
+  // Encres Shade (couleurs réelles) par nom normalisé.
+  var SHADEHEX = {
+    nulnoil:"#1a1712", reiklandfleshshade:"#9a5a2e", casandorayellow:"#e0a81f",
+    fueganorange:"#b5461a", carroburgcrimson:"#7a1f2b", druchiiviolet:"#3a2350",
+    drakenhofnightshade:"#1f2f52", coeliagreenshade:"#12463f", bieltangreen:"#16463a",
+    athoniancamoshade:"#5c5f2a", seraphimsepia:"#9a7038", agraxearthshade:"#3a2a1e"
+  };
+
   var data = {};          // {Base: [rows], ...}   rows: {id,nom,prix,metal,have,idx}
   var active = "dash";    // "dash" | table id
   var filter = "all";
@@ -479,9 +528,9 @@
     function st(name) { var k = nameKey(name); return { name: name, has: idx[k] === true, known: (k in idx) }; }
 
     var q = rQuery.trim().toLowerCase();
-    var enriched = RECIPES.map(function (rc) {
+    var enriched = RECIPES.map(function (rc, i) {
       var base = st(rc.b), l1 = st(rc.l1), l2 = st(rc.l2), dry = st(rc.dry), sh = st(rc.sh);
-      return { rc: rc, base: base, l1: l1, l2: l2, dry: dry, sh: sh,
+      return { idx: i, rc: rc, base: base, l1: l1, l2: l2, dry: dry, sh: sh,
         layOK: l1.has && l2.has, dryOK: dry.has };
     });
 
@@ -499,10 +548,11 @@
       return true;
     });
 
-    function cell(kind, s, isBase) {
+    function cell(kind, s, swatch, isBase) {
       var cls = s.has ? "ok" : (s.known ? "no" : "unk");
       var mark = s.has ? "✓" : (s.known ? "✗" : "?");
       return '<div class="rcell ' + cls + (isBase ? " base" : "") + '">' +
+        '<span class="rsw" style="background:' + swatch + '"></span>' +
         '<span class="rk">' + kind + '</span>' +
         '<span class="rn">' + esc(s.name) + '</span>' +
         '<span class="rm">' + mark + '</span></div>';
@@ -513,10 +563,12 @@
     list.innerHTML =
       '<div class="rhint"><span>◀ Layering</span><span>Base</span><span>Dry brushing ▶</span></div>' +
       rows.map(function (e) {
+        var C = RSAMPLE[e.idx] || { l2: "#5a5a5a", l1: "#5a5a5a", b: "#5a5a5a", dry: "#5a5a5a" };
+        var shHex = SHADEHEX[nameKey(e.sh.name)] || "#5a5a5a";
         return '<div class="rcard' + (e.base.has ? "" : " dim") + '">' +
           '<div class="rstrip">' +
-            cell("Layer 2", e.l2) + cell("Layer 1", e.l1) + cell("Shade", e.sh) +
-            cell("Base", e.base, true) + cell("Dry", e.dry) + cell("Shade", e.sh) +
+            cell("Layer 2", e.l2, C.l2) + cell("Layer 1", e.l1, C.l1) + cell("Shade", e.sh, shHex) +
+            cell("Base", e.base, C.b, true) + cell("Dry", e.dry, C.dry) + cell("Shade", e.sh, shHex) +
           '</div>' +
           '<div class="rtags">' +
             '<span class="rtag ' + (e.layOK ? "ok" : "no") + '">Layering ' + (e.layOK ? "OK" : "✗") + '</span>' +
