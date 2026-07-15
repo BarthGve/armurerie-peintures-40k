@@ -148,6 +148,7 @@
   .paint .idx { font-size: 11px; color: var(--muted); width: 26px; flex: none; font-variant-numeric: tabular-nums; text-align: right; }
   .paint .body { flex: 1; min-width: 0; }
   .paint .nm { font-size: 15px; letter-spacing: .5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .paint .pdot { display: inline-block; width: 13px; height: 13px; border-radius: 50%; margin-left: 8px; vertical-align: middle; border: 1px solid rgba(255,255,255,.25); box-shadow: 0 0 0 1px rgba(0,0,0,.3); }
   .paint.have .nm { color: var(--green); }
   .paint .meta { font-size: 11px; color: var(--bone-dim); letter-spacing: .5px; margin-top: 2px; display: flex; align-items: center; gap: 8px; }
   .paint .price { font-variant-numeric: tabular-nums; }
@@ -538,8 +539,9 @@
     var list = document.getElementById("list");
     if (!vis.length) { list.innerHTML = '<div class="empty">Aucun pot ne correspond.</div>'; return; }
     list.innerHTML = vis.map(function (r) {
+      var hk = nameKey(r.nom), hx = PAINTHEX[hk] || SHADEHEX[hk];
       return '<button class="paint' + (r.have ? " have" : "") + '" data-id="' + r.id + '" type="button" aria-pressed="' + r.have + '">' +
-        '<span class="body"><span class="nm">' + esc(r.nom) + '</span>' +
+        '<span class="body"><span class="nm">' + esc(r.nom) + '<span class="pdot" style="background:' + (hx || "transparent") + '"></span></span>' +
         '<span class="meta"><span class="price">' + eur2(r.prix) + '</span>' + (r.metal ? '<span class="badge-metal">Métallique</span>' : '') + '</span></span>' +
         '<span class="sw" aria-hidden="true"></span></button>';
     }).join("");
