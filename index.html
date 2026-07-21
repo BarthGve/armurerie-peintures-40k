@@ -179,6 +179,75 @@
   .rtag.no { color: #e07a6a; border-color: #7a3a30; background: rgba(224,90,74,.08); }
   .rmini { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
 
+  /* ======= SUPPORTS ======= */
+  .supwrap { display: grid; grid-template-columns: 292px 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 880px) { .supwrap { grid-template-columns: 1fr; } }
+
+  .reserve { position: sticky; top: 10px; padding: 14px 12px; }
+  .reserve .rhead { display: flex; align-items: baseline; justify-content: space-between; }
+  .reserve h3 { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 600; }
+  .reserve .cnt { font-size: 11px; color: var(--bone-dim); font-variant-numeric: tabular-nums; }
+  .reserve .hint { font-size: 11px; color: var(--muted); line-height: 1.45; margin: 5px 0 10px; }
+  .reserve .search { margin-bottom: 9px; }
+  .reserve.hot { border-color: var(--gold-dim); box-shadow: 0 0 0 1px var(--gold-dim) inset; }
+  .rzone { display: flex; flex-direction: column; gap: 6px; max-height: 60vh; overflow-y: auto; padding-right: 3px; }
+
+  .gchips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+  .gchip { display: flex; align-items: center; gap: 5px; background: transparent; border: 1px solid var(--line); color: var(--bone-dim); font: inherit; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; padding: 4px 8px; border-radius: 5px; cursor: pointer; }
+  .gchip:hover { border-color: var(--line-hot); color: var(--bone); }
+  .gchip .gd { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .gchip.on { color: var(--bone); border-color: var(--gold-dim); background: rgba(212,175,55,.12); }
+
+  .pchip { display: flex; align-items: center; gap: 9px; padding: 7px 9px; border-radius: 6px; cursor: grab; background: var(--panel-2); border: 1px solid var(--line); }
+  .pchip:hover { border-color: var(--line-hot); }
+  .pchip.drag { opacity: .35; }
+  .pchip .psw { width: 15px; height: 21px; border-radius: 3px 3px 4px 4px; flex: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.35); background-image: linear-gradient(120deg, rgba(255,255,255,.38), rgba(255,255,255,0) 55%); }
+  .pchip .pnm { flex: 1; min-width: 0; font-size: 13px; letter-spacing: .3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pchip .pgm { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; flex: none; }
+
+  .suphead { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .suphead .st { font-size: 12px; letter-spacing: 1px; color: var(--bone-dim); font-variant-numeric: tabular-nums; }
+  .suphead .st b { color: var(--gold); font-weight: 700; }
+  .addrack { margin-left: auto; background: var(--gold); color: #14100c; border: none; font: inherit; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; padding: 8px 14px; border-radius: 5px; cursor: pointer; }
+  .addrack:hover { background: #f0d878; }
+
+  .rack { margin-bottom: 22px; }
+  .rkhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+  .rkname { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+  .rkname small { color: var(--muted); font-weight: 400; letter-spacing: 1px; font-size: 11px; white-space: nowrap; }
+  .rkedit { background: transparent; border: 1px solid transparent; color: var(--gold); font: inherit; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; padding: 3px 6px; margin-left: -6px; border-radius: 4px; cursor: text; text-align: left; }
+  .rkedit:hover { border-color: var(--gold-dim); background: rgba(212,175,55,.08); }
+  .rkedit .pen { font-size: 10px; opacity: 0; margin-left: 6px; }
+  .rkedit:hover .pen { opacity: .7; }
+  .rkinput { background: var(--panel); border: 1px solid var(--gold-dim); color: var(--bone); font: inherit; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; padding: 3px 6px; margin-left: -6px; border-radius: 4px; outline: none; width: 240px; max-width: 55vw; }
+  .rkdel { background: transparent; border: 1px solid var(--line); color: var(--bone-dim); font: inherit; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+  .rkdel:hover:not([disabled]) { border-color: #7a3a30; color: #e07a6a; }
+  .rkdel[disabled] { opacity: .25; cursor: not-allowed; }
+
+  .frame { padding: 12px; border-radius: 8px; overflow-x: auto;
+    background: linear-gradient(180deg, #c6a877, #b18f5c); border: 1px solid #8a6c40;
+    box-shadow: 0 18px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.3), inset 0 -2px 4px rgba(120,90,50,.4); }
+  .rail { height: 20px; border-radius: 5px; margin-bottom: 9px; background: linear-gradient(180deg, #cdb082, #b7965d); border: 1px solid #8a6c40; box-shadow: inset 0 2px 4px rgba(0,0,0,.25); }
+  .base { height: 14px; border-radius: 0 0 5px 5px; margin-top: 2px; background: linear-gradient(180deg, #b7975f, #9c7d48); box-shadow: inset 0 2px 4px rgba(0,0,0,.3); }
+  .shelf { display: grid; min-width: 420px; }
+  .cell { position: relative; height: 82px; background: linear-gradient(180deg, #c9ac7c, #b7975f); border-right: 1px solid rgba(120,90,50,.4); border-bottom: 1px solid rgba(120,90,50,.4); }
+  .cell:last-child { border-right: none; }
+  .shelf.last .cell { border-bottom: none; }
+  .arch { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 62px; height: 66px;
+    border-top-left-radius: 31px; border-top-right-radius: 31px;
+    background: radial-gradient(120% 95% at 50% 100%, #5f4a2b, #8a6c42);
+    box-shadow: inset 0 4px 9px rgba(60,42,20,.7), inset 0 0 0 1px rgba(90,66,36,.55); }
+  .cell.over .arch { outline: 2px solid var(--gold); outline-offset: -2px; }
+  .cell .cnum { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 600; color: rgba(80,58,30,.6); }
+  .pot { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 50px; cursor: grab; animation: potpop .28s ease-out; }
+  .pot.drag { opacity: .35; }
+  .pot .cap { position: relative; height: 13px; width: 54px; margin: 0 auto; border-radius: 6px 6px 3px 3px; background: linear-gradient(180deg, rgba(242,244,247,.94), rgba(200,203,207,.82)); box-shadow: 0 2px 4px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.7); }
+  .pot .cap i { position: absolute; top: 3px; left: 5px; width: 6px; height: 6px; border-radius: 50%; }
+  .pot .bod { height: 48px; width: 50px; border-radius: 4px 4px 6px 6px; box-shadow: inset 0 -7px 11px rgba(0,0,0,.3), 0 4px 7px rgba(0,0,0,.45); }
+  .pot .x { position: absolute; top: -7px; right: -6px; width: 18px; height: 18px; border-radius: 50%; border: none; cursor: pointer; background: rgba(10,11,13,.85); color: #e07a6a; font: 700 10px/18px sans-serif; padding: 0; box-shadow: 0 0 0 1px rgba(224,90,74,.5); opacity: 0; transition: opacity .15s; }
+  .pot:hover .x, .pot:focus-within .x { opacity: 1; }
+  @keyframes potpop { 0% { transform: translateX(-50%) scale(.6); opacity: 0; } 60% { transform: translateX(-50%) scale(1.06); } 100% { transform: translateX(-50%) scale(1); opacity: 1; } }
+
   .hidden { display: none !important; }
 
   .banner { margin: 0 0 14px; padding: 11px 14px; border-radius: 6px; border: 1px solid #6b4f1a;
@@ -260,6 +329,26 @@
       </div>
     </div>
     <div class="rlist" id="rlist"></div>
+  </div>
+
+  <!-- ===== SUPPORTS VIEW ===== -->
+  <div id="view-supports" class="hidden">
+    <div class="supwrap">
+      <aside class="panel reserve" id="reserve">
+        <div class="rhead"><h3>Réserve</h3><span class="cnt" id="s-cnt">0 pot</span></div>
+        <p class="hint">Glissez un pot vers un emplacement libre. Relâchez un pot ici pour le retirer du support.</p>
+        <div class="search"><span class="ico">⌕</span><input id="sq" type="search" placeholder="Rechercher un pot…" aria-label="Rechercher un pot à ranger" /></div>
+        <div class="gchips" id="s-chips"></div>
+        <div class="rzone" id="s-reserve"></div>
+      </aside>
+      <main>
+        <div class="suphead">
+          <span class="st">Rangés <b id="s-placed">0</b> / <span id="s-slots">0</span> emplacements</span>
+          <button class="addrack" id="s-add" type="button">+ Ajouter un support</button>
+        </div>
+        <div id="s-racks"></div>
+      </main>
+    </div>
   </div>
 
   <footer>
@@ -500,6 +589,11 @@
   var updating = {};      // key "table:id" -> true
   var DEMO = /[?&]demo=1\b/.test(location.search);
 
+  // ---- supports (présentoirs) ----
+  var racks = [];          // [{id, nom, lignes, colonnes, ordre}]
+  var slots = [];          // [{id, presentoir, ligne, colonne, gamme, pot}]
+  var sFilter = "ALL", sQuery = "", dragging = null, busy = false, seq = -1, renaming = 0;
+
   var R = 85, CX = 100, CY = 110, ARC_LEN = Math.PI * R;
   function arcPath() { return "M " + (CX - R) + " " + CY + " A " + R + " " + R + " 0 0 1 " + (CX + R) + " " + CY; }
   function eur(v) { return (v || 0).toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " €"; }
@@ -553,6 +647,7 @@
   function renderTabs() {
     var html = '<button class="tab dash' + (active === "dash" ? " on" : "") + '" data-v="dash">Tableau de bord</button>';
     html += '<button class="tab' + (active === "recipes" ? " on" : "") + '" data-v="recipes">Recettes</button>';
+    html += '<button class="tab' + (active === "supports" ? " on" : "") + '" data-v="supports">Supports <i>' + slots.length + '</i></button>';
     html += TYPES.map(function (t) {
       var s = statsOf(t.id);
       return '<button class="tab' + (active === t.id ? " on" : "") + '" data-v="' + t.id + '">' +
@@ -689,15 +784,260 @@
       }).join("");
   }
 
+  /* ======== SUPPORTS (présentoirs) ======== */
+  function toRows(tbl) {
+    if (Array.isArray(tbl)) return tbl.slice();
+    var keys = Object.keys(tbl || {}), ids = (tbl && tbl.id) || [], out = [];
+    for (var i = 0; i < ids.length; i++) {
+      var o = {};
+      keys.forEach(function (k) { o[k] = tbl[k][i]; });
+      out.push(o);
+    }
+    return out;
+  }
+  function normRacks(tbl) {
+    return toRows(tbl).map(function (r) {
+      return { id: r.id, nom: r.Nom || "", lignes: Math.max(1, +r.Lignes || 6), colonnes: Math.max(1, +r.Colonnes || 8), ordre: +r.Ordre || 0 };
+    }).sort(function (a, b) { return (a.ordre - b.ordre) || (a.id - b.id); });
+  }
+  function normSlots(tbl) {
+    return toRows(tbl).map(function (r) {
+      return { id: r.id, rack: +r.Presentoir || 0, l: +r.Ligne || 0, c: +r.Colonne || 0, gamme: r.Gamme || "", pot: r.Pot || "" };
+    }).filter(function (s) { return s.rack && s.pot; });
+  }
+  function potKey(gamme, nom) { return gamme + "|" + nameKey(nom); }
+
+  function ownedPots() {
+    var out = [];
+    TYPES.forEach(function (t) {
+      (data[t.id] || []).forEach(function (r) {
+        if (r.have) out.push({ gamme: t.id, nom: r.nom, metal: r.metal, key: potKey(t.id, r.nom) });
+      });
+    });
+    return out;
+  }
+  function potFill(nom, metal) {
+    var hex = paintHex(nom);
+    var sheen = metal
+      ? "linear-gradient(110deg, rgba(255,255,255,.6), rgba(255,255,255,.06) 42%, rgba(0,0,0,.32))"
+      : "linear-gradient(110deg, rgba(255,255,255,.3), rgba(255,255,255,0) 44%, rgba(0,0,0,.22))";
+    return "background:" + hex + ";background-image:" + sheen + ";";
+  }
+
+  function renderSupports() {
+    var placed = {}, byCell = {};
+    slots.forEach(function (s) {
+      placed[potKey(s.gamme, s.pot)] = s;
+      byCell[s.rack + ":" + s.l + ":" + s.c] = s;
+    });
+
+    /* --- réserve --- */
+    var list = ownedPots().filter(function (p) { return !placed[p.key]; });
+    if (sFilter !== "ALL") list = list.filter(function (p) { return p.gamme === sFilter; });
+    if (sQuery.trim()) {
+      var q = nameKey(sQuery);
+      list = list.filter(function (p) { return nameKey(p.nom).indexOf(q) >= 0; });
+    }
+    var order = {}; TYPES.forEach(function (t, i) { order[t.id] = i; });
+    list.sort(function (a, b) { return (order[a.gamme] - order[b.gamme]) || a.nom.localeCompare(b.nom, "fr"); });
+
+    document.getElementById("s-cnt").textContent = list.length + (list.length < 2 ? " pot à ranger" : " pots à ranger");
+    document.getElementById("s-chips").innerHTML =
+      '<button class="gchip' + (sFilter === "ALL" ? " on" : "") + '" data-g="ALL" type="button">Tout</button>' +
+      TYPES.map(function (t) {
+        return '<button class="gchip' + (sFilter === t.id ? " on" : "") + '" data-g="' + t.id + '" type="button">' +
+          '<span class="gd" style="background:' + t.c2 + '"></span>' + t.label + '</button>';
+      }).join("");
+    document.getElementById("s-reserve").innerHTML = list.length
+      ? list.map(function (p) {
+          return '<div class="pchip" draggable="true" data-g="' + esc(p.gamme) + '" data-n="' + esc(p.nom) + '" title="' + esc(p.nom) + ' · ' + esc(COLOR[p.gamme].label) + '">' +
+            '<span class="psw" style="' + potFill(p.nom, p.metal) + '"></span>' +
+            '<span class="pnm">' + esc(p.nom) + '</span>' +
+            '<span class="pgm" style="color:' + COLOR[p.gamme].c2 + '">' + esc(COLOR[p.gamme].label) + '</span></div>';
+        }).join("")
+      : '<div class="empty">Tous les pots détenus sont rangés.</div>';
+
+    /* --- présentoirs --- */
+    var totSlots = 0;
+    racks.forEach(function (r) { totSlots += r.lignes * r.colonnes; });
+    document.getElementById("s-placed").textContent = slots.length;
+    document.getElementById("s-slots").textContent = totSlots;
+
+    document.getElementById("s-racks").innerHTML = racks.length
+      ? racks.map(function (rk, ri) {
+          var tot = rk.lignes * rk.colonnes, filled = 0;
+          slots.forEach(function (s) { if (s.rack === rk.id) filled++; });
+          var shelves = "";
+          for (var l = 0; l < rk.lignes; l++) {
+            var cells = "";
+            for (var c = 0; c < rk.colonnes; c++) {
+              var s = byCell[rk.id + ":" + l + ":" + c];
+              cells += '<div class="cell" data-rk="' + rk.id + '" data-l="' + l + '" data-c="' + c + '">' +
+                '<div class="arch"></div>' +
+                (s
+                  ? '<div class="pot" draggable="true" data-sid="' + s.id + '" title="' + esc(s.pot) + ' · ' + esc((COLOR[s.gamme] || {}).label || s.gamme) + '">' +
+                      '<div class="cap"><i style="background:' + ((COLOR[s.gamme] || {}).c2 || "#d4af37") + '"></i></div>' +
+                      '<div class="bod" style="' + potFill(s.pot, false) + '"></div>' +
+                      '<button class="x" data-rm="' + s.id + '" type="button" aria-label="Retirer ' + esc(s.pot) + '">✕</button></div>'
+                  : '<span class="cnum">' + (l * rk.colonnes + c + 1) + '</span>') +
+                '</div>';
+            }
+            shelves += '<div class="shelf' + (l === rk.lignes - 1 ? " last" : "") + '" style="grid-template-columns:repeat(' + rk.colonnes + ',minmax(52px,1fr))">' + cells + '</div>';
+          }
+          var canDel = filled === 0 && racks.length > 1 && rk.id > 0;
+          var nom = rk.nom || ("Support n°" + (ri + 1));
+          var title = renaming === rk.id
+            ? '<input class="rkinput" id="rk-in-' + rk.id + '" data-ren-in="' + rk.id + '" type="text" maxlength="40" value="' + esc(nom) + '" aria-label="Nom du support" />'
+            : '<button class="rkedit" data-ren="' + rk.id + '" type="button" title="Renommer ce support">' + esc(nom) + '<span class="pen" aria-hidden="true">✎</span></button>';
+          return '<section class="rack">' +
+            '<div class="rkhead"><div class="rkname">' + title +
+              '<small>' + filled + ' / ' + tot + ' emplacements</small></div>' +
+            '<button class="rkdel" data-del="' + rk.id + '" type="button"' + (canDel ? "" : " disabled") + '>✕ Retirer</button></div>' +
+            '<div class="frame"><div class="rail"></div>' + shelves + '<div class="base"></div></div></section>';
+        }).join("")
+      : '<div class="empty">Aucun présentoir. Ajoutez-en un pour commencer.</div>';
+
+    if (renaming) {
+      var inp = document.getElementById("rk-in-" + renaming);
+      if (inp) { inp.focus(); inp.select(); } else { renaming = 0; }
+    }
+  }
+
+  function renameRack(id, val) {
+    if (renaming !== id) return;              // déjà validé (Entrée puis blur)
+    renaming = 0;
+    var rk = null;
+    racks.forEach(function (r) { if (r.id === id) rk = r; });
+    var nom = String(val == null ? "" : val).trim().slice(0, 40);
+    if (!rk || !nom || nom === rk.nom || busy || id <= 0) { renderSupports(); return; }
+    sApply([["UpdateRecord", "Presentoirs", id, { Nom: nom }]], function () { rk.nom = nom; });
+  }
+
+  /* ---- mutations ---- */
+  function sApply(actions, optimistic) {
+    optimistic();
+    renderSupports();
+    renderTabs();
+    if (DEMO || !(window.grist && grist.docApi)) return;
+    busy = true;
+    grist.docApi.applyUserActions(actions)
+      .catch(function (e) { console.error("[Supports] écriture impossible :", e); })
+      .then(function () { return fetchSupports(); })
+      .then(function () { busy = false; renderSupports(); renderTabs(); stamp(); });
+  }
+  function slotById(id) { for (var i = 0; i < slots.length; i++) if (slots[i].id === id) return slots[i]; return null; }
+  function slotAt(rk, l, c) { for (var i = 0; i < slots.length; i++) { var s = slots[i]; if (s.rack === rk && s.l === l && s.c === c) return s; } return null; }
+
+  function dropOnCell(rk, l, c) {
+    if (busy || !dragging) return;
+    var target = slotAt(rk, l, c);
+    if (dragging.type === "reserve") {
+      if (target) return;                       // emplacement occupé
+      var g = dragging.gamme, nom = dragging.pot;
+      sApply([["AddRecord", "Rangement", null, { Presentoir: rk, Ligne: l, Colonne: c, Gamme: g, Pot: nom }]],
+        function () { slots.push({ id: seq--, rack: rk, l: l, c: c, gamme: g, pot: nom }); });
+      return;
+    }
+    var src = slotById(dragging.sid);
+    if (!src || (src.rack === rk && src.l === l && src.c === c)) return;
+    var from = { rack: src.rack, l: src.l, c: src.c };
+    if (target) {                               // échange des deux pots
+      sApply([
+        ["UpdateRecord", "Rangement", src.id, { Presentoir: rk, Ligne: l, Colonne: c }],
+        ["UpdateRecord", "Rangement", target.id, { Presentoir: from.rack, Ligne: from.l, Colonne: from.c }]
+      ], function () {
+        target.rack = from.rack; target.l = from.l; target.c = from.c;
+        src.rack = rk; src.l = l; src.c = c;
+      });
+    } else {
+      sApply([["UpdateRecord", "Rangement", src.id, { Presentoir: rk, Ligne: l, Colonne: c }]],
+        function () { src.rack = rk; src.l = l; src.c = c; });
+    }
+  }
+  function removeSlot(sid) {
+    if (busy || !slotById(sid)) return;
+    sApply([["RemoveRecord", "Rangement", sid]],
+      function () { slots = slots.filter(function (x) { return x.id !== sid; }); });
+  }
+  function addRack() {
+    if (busy) return;
+    var n = racks.length + 1, nom = "Support n°" + n;
+    sApply([["AddRecord", "Presentoirs", null, { Nom: nom, Lignes: 6, Colonnes: 8, Ordre: n }]],
+      function () { racks.push({ id: seq--, nom: nom, lignes: 6, colonnes: 8, ordre: n }); });
+  }
+  function removeRack(id) {
+    if (busy || racks.length < 2 || id <= 0) return;
+    if (slots.some(function (s) { return s.rack === id; })) return;
+    sApply([["RemoveRecord", "Presentoirs", id]],
+      function () { racks = racks.filter(function (r) { return r.id !== id; }); });
+  }
+
+  /* ---- drag & drop ---- */
+  (function () {
+    var sup = document.getElementById("view-supports"), res = document.getElementById("reserve");
+    function clearHl() {
+      sup.querySelectorAll(".drag").forEach(function (x) { x.classList.remove("drag"); });
+      sup.querySelectorAll(".cell.over").forEach(function (x) { x.classList.remove("over"); });
+      res.classList.remove("hot");
+    }
+    sup.addEventListener("dragstart", function (e) {
+      var chip = e.target.closest(".pchip"), pot = chip ? null : e.target.closest(".pot");
+      if (chip) { dragging = { type: "reserve", gamme: chip.getAttribute("data-g"), pot: chip.getAttribute("data-n") }; chip.classList.add("drag"); }
+      else if (pot) { dragging = { type: "slot", sid: +pot.getAttribute("data-sid") }; pot.classList.add("drag"); }
+      else { e.preventDefault(); return; }
+      if (e.dataTransfer) { e.dataTransfer.effectAllowed = "move"; try { e.dataTransfer.setData("text/plain", "pot"); } catch (x) {} }
+    });
+    sup.addEventListener("dragend", function () { dragging = null; clearHl(); });
+    sup.addEventListener("dragover", function (e) {
+      if (!dragging) return;
+      var cell = e.target.closest(".cell");
+      if (cell) { e.preventDefault(); cell.classList.add("over"); return; }
+      if (dragging.type === "slot" && e.target.closest("#reserve")) { e.preventDefault(); res.classList.add("hot"); }
+    });
+    sup.addEventListener("dragleave", function (e) {
+      var cell = e.target.closest(".cell");
+      if (cell && !cell.contains(e.relatedTarget)) cell.classList.remove("over");
+      if (e.target.closest("#reserve") && !res.contains(e.relatedTarget)) res.classList.remove("hot");
+    });
+    sup.addEventListener("drop", function (e) {
+      if (!dragging) return;
+      e.preventDefault();
+      var cell = e.target.closest(".cell");
+      if (cell) dropOnCell(+cell.getAttribute("data-rk"), +cell.getAttribute("data-l"), +cell.getAttribute("data-c"));
+      else if (dragging.type === "slot" && e.target.closest("#reserve")) removeSlot(dragging.sid);
+      dragging = null; clearHl();
+    });
+    sup.addEventListener("click", function (e) {
+      var ren = e.target.closest("[data-ren]"); if (ren) { renaming = +ren.getAttribute("data-ren"); renderSupports(); return; }
+      var rm = e.target.closest("[data-rm]"); if (rm) { removeSlot(+rm.getAttribute("data-rm")); return; }
+      var del = e.target.closest("[data-del]"); if (del) { if (!del.disabled) removeRack(+del.getAttribute("data-del")); return; }
+      var ch = e.target.closest(".gchip"); if (ch) { sFilter = ch.getAttribute("data-g"); renderSupports(); return; }
+      if (e.target.closest("#s-add")) addRack();
+    });
+    document.getElementById("sq").addEventListener("input", function (e) { sQuery = e.target.value; renderSupports(); });
+
+    sup.addEventListener("keydown", function (e) {
+      var inp = e.target.closest("[data-ren-in]"); if (!inp) return;
+      if (e.key === "Enter") { e.preventDefault(); renameRack(+inp.getAttribute("data-ren-in"), inp.value); }
+      else if (e.key === "Escape") { e.preventDefault(); renaming = 0; renderSupports(); }
+    });
+    sup.addEventListener("focusout", function (e) {
+      var inp = e.target.closest("[data-ren-in]"); if (!inp) return;
+      renameRack(+inp.getAttribute("data-ren-in"), inp.value);
+    });
+  })();
+
   /* ---------- master render ---------- */
   function render() {
     renderTabs();
-    var view = active === "dash" ? "dash" : (active === "recipes" ? "recipes" : "gamme");
+    var view = (active === "dash" || active === "recipes" || active === "supports") ? active : "gamme";
     document.getElementById("view-dash").classList.toggle("hidden", view !== "dash");
     document.getElementById("view-recipes").classList.toggle("hidden", view !== "recipes");
+    document.getElementById("view-supports").classList.toggle("hidden", view !== "supports");
     document.getElementById("view-gamme").classList.toggle("hidden", view !== "gamme");
     if (view === "dash") renderDash();
     else if (view === "recipes") renderRecipes();
+    else if (view === "supports") renderSupports();
     else renderGamme();
 
     var totHave = 0, totAll = 0;
@@ -715,9 +1055,22 @@
     el.innerHTML = msg; el.classList.remove("hidden");
   }
 
+  async function fetchSupports() {
+    try {
+      racks = normRacks(await grist.docApi.fetchTable("Presentoirs"));
+      slots = normSlots(await grist.docApi.fetchTable("Rangement"));
+    } catch (e) {
+      console.error("[Supports] Lecture Presentoirs/Rangement impossible :", e);
+    }
+  }
+  function supportsKey() {
+    return racks.map(function (r) { return r.id + "/" + r.nom + "/" + r.lignes + "x" + r.colonnes; }).join(",") + "#" +
+      slots.map(function (s) { return s.id + ":" + s.rack + ":" + s.l + ":" + s.c + ":" + s.pot; }).sort().join(",");
+  }
+
   var lastKey = "", fetching = false;
   async function fetchAll() {
-    if (fetching) return;            // évite les appels qui se chevauchent
+    if (fetching || busy || dragging || renaming) return;   // pas de refresh pendant un drag / une écriture / un renommage
     fetching = true;
     var okCount = 0, lastErr = null;
     try {
@@ -725,6 +1078,7 @@
         try { data[TYPES[i].id] = normalize(await grist.docApi.fetchTable(TYPES[i].id)); okCount++; }
         catch (e) { lastErr = e; data[TYPES[i].id] = data[TYPES[i].id] || []; }
       }
+      await fetchSupports();
     } finally { fetching = false; }
     if (okCount === 0) {
       console.error("[Armurerie] Lecture des tables impossible :", lastErr);
@@ -732,7 +1086,7 @@
     } else {
       banner("");
     }
-    var key = JSON.stringify(TYPES.map(function (t) { return statsOf(t.id); }));
+    var key = JSON.stringify(TYPES.map(function (t) { return statsOf(t.id); })) + "|" + supportsKey();
     if (key !== lastKey) { lastKey = key; render(); }
     stamp();
   }
@@ -797,6 +1151,8 @@
     data.Contrast = normalize(pots("Contrast", 61, 5.04, 15));
     data.Dry = normalize(pots("Dry", 24, 2.88, 3));
     data.Technical = normalize(pots("Technical", 22, 4.34, 5));
+    racks = [{ id: 1, nom: "Support n°1", lignes: 6, colonnes: 8, ordre: 1 }];
+    slots = [];
     render();
     document.getElementById("stamp").textContent = "APERÇU (hors Grist)";
   }
@@ -804,7 +1160,7 @@
   /* ---------- boot ---------- */
   if (DEMO) {
     demo();
-    var m = location.search.match(/[?&]v=([A-Za-z]+)/); if (m && (m[1] === "dash" || m[1] === "recipes" || COLOR[m[1]])) { active = m[1]; render(); }
+    var m = location.search.match(/[?&]v=([A-Za-z]+)/); if (m && (m[1] === "dash" || m[1] === "recipes" || m[1] === "supports" || COLOR[m[1]])) { active = m[1]; render(); }
   } else if (window.grist && grist.ready) {
     grist.ready({ requiredAccess: "full" });
     fetchAll();
