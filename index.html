@@ -249,12 +249,7 @@
   .cell .cnum { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 600; color: rgba(80,58,30,.6); }
   .pot { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 50px; cursor: grab; animation: potpop .28s ease-out; }
   .pot.drag { opacity: .35; }
-  .pot.off .bod { filter: grayscale(.95) brightness(.7); }
-  .pot.off .cap i { filter: grayscale(1); opacity: .5; }
-  .potlbl { position: absolute; top: 21px; left: 50%; transform: translateX(-50%); z-index: 3; pointer-events: none;
-    font-size: 8px; line-height: 1.05; letter-spacing: .5px; text-transform: uppercase; font-weight: 700; text-align: center;
-    color: var(--bone); background: rgba(10,11,13,.82); border: 1px solid rgba(231,230,225,.35); border-radius: 3px; padding: 2px 4px; }
-  .pot.off::after { content: ""; position: absolute; inset: 0 0 -2px 0; border: 1px dashed rgba(231,230,225,.4); border-radius: 4px 4px 7px 7px; pointer-events: none; }
+  .pot.off .cap { background: linear-gradient(180deg, #e05a4a, #b0322b); box-shadow: 0 2px 4px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.35); }
   .pot .cap { position: relative; height: 13px; width: 54px; margin: 0 auto; border-radius: 6px 6px 3px 3px; background: linear-gradient(180deg, rgba(242,244,247,.94), rgba(200,203,207,.82)); box-shadow: 0 2px 4px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.7); }
   .pot .cap i { position: absolute; top: 3px; left: 5px; width: 6px; height: 6px; border-radius: 50%; }
   .pot .bod { height: 48px; width: 50px; border-radius: 4px 4px 6px 6px; box-shadow: inset 0 -7px 11px rgba(0,0,0,.3), 0 4px 7px rgba(0,0,0,.45); }
@@ -917,7 +912,6 @@
                   ? '<div class="pot' + (owned[potKey(s.gamme, s.pot)] ? "" : " off") + '" draggable="true" data-sid="' + s.id + '" title="' + esc(s.pot) + ' · ' + esc((COLOR[s.gamme] || {}).label || s.gamme) + (owned[potKey(s.gamme, s.pot)] ? "" : " · non détenu") + '">' +
                       '<div class="cap"><i style="background:' + ((COLOR[s.gamme] || {}).c2 || "#d4af37") + '"></i></div>' +
                       '<div class="bod" style="' + potFill(s.pot, false) + '"></div>' +
-                      (owned[potKey(s.gamme, s.pot)] ? "" : '<span class="potlbl">non<br>détenu</span>') +
                       '<button class="x" data-rm="' + s.id + '" type="button" aria-label="Retirer ' + esc(s.pot) + '">✕</button></div>'
                   : '<span class="cnum">' + (l * rk.colonnes + c + 1) + '</span>') +
                 '</div>';
