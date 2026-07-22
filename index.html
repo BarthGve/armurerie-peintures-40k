@@ -192,6 +192,11 @@
   .reserve.hot { border-color: var(--gold-dim); box-shadow: 0 0 0 1px var(--gold-dim) inset; }
   .rzone { display: flex; flex-direction: column; gap: 6px; max-height: 60vh; overflow-y: auto; padding-right: 3px; }
 
+  .stoggle { display: flex; gap: 0; margin-bottom: 8px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .stoggle button { flex: 1; background: transparent; color: var(--bone-dim); border: none; font: inherit; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; padding: 7px 6px; cursor: pointer; }
+  .stoggle button:hover { color: var(--bone); }
+  .stoggle button.on { background: var(--gold); color: #14100c; font-weight: 700; }
+
   .gchips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
   .gchip { display: flex; align-items: center; gap: 5px; background: transparent; border: 1px solid var(--line); color: var(--bone-dim); font: inherit; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; padding: 4px 8px; border-radius: 5px; cursor: pointer; }
   .gchip:hover { border-color: var(--line-hot); color: var(--bone); }
@@ -201,6 +206,10 @@
   .pchip { display: flex; align-items: center; gap: 9px; padding: 7px 9px; border-radius: 6px; cursor: grab; background: var(--panel-2); border: 1px solid var(--line); }
   .pchip:hover { border-color: var(--line-hot); }
   .pchip.drag { opacity: .35; }
+  .pchip.off { opacity: .5; border-style: dashed; }
+  .pchip.off .pnm { color: var(--muted); }
+  .pchip.off .psw { filter: grayscale(.55) brightness(.8); }
+  .pchip .pmiss { font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 1px 4px; flex: none; }
   .pchip .psw { width: 15px; height: 21px; border-radius: 3px 3px 4px 4px; flex: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.35); background-image: linear-gradient(120deg, rgba(255,255,255,.38), rgba(255,255,255,0) 55%); }
   .pchip .pnm { flex: 1; min-width: 0; font-size: 13px; letter-spacing: .3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pchip .pgm { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; flex: none; }
@@ -241,6 +250,8 @@
   .cell .cnum { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 600; color: rgba(80,58,30,.6); }
   .pot { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 50px; cursor: grab; animation: potpop .28s ease-out; }
   .pot.drag { opacity: .35; }
+  .pot.off .bod { filter: grayscale(.55) brightness(.82); }
+  .pot.off::after { content: ""; position: absolute; inset: 0 0 -2px 0; border: 1px dashed rgba(231,230,225,.4); border-radius: 4px 4px 7px 7px; pointer-events: none; }
   .pot .cap { position: relative; height: 13px; width: 54px; margin: 0 auto; border-radius: 6px 6px 3px 3px; background: linear-gradient(180deg, rgba(242,244,247,.94), rgba(200,203,207,.82)); box-shadow: 0 2px 4px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.7); }
   .pot .cap i { position: absolute; top: 3px; left: 5px; width: 6px; height: 6px; border-radius: 50%; }
   .pot .bod { height: 48px; width: 50px; border-radius: 4px 4px 6px 6px; box-shadow: inset 0 -7px 11px rgba(0,0,0,.3), 0 4px 7px rgba(0,0,0,.45); }
@@ -338,6 +349,7 @@
         <div class="rhead"><h3>Réserve</h3><span class="cnt" id="s-cnt">0 pot</span></div>
         <p class="hint">Glissez un pot vers un emplacement libre. Relâchez un pot ici pour le retirer du support.</p>
         <div class="search"><span class="ico">⌕</span><input id="sq" type="search" placeholder="Rechercher un pot…" aria-label="Rechercher un pot à ranger" /></div>
+        <div class="stoggle" id="s-scope"></div>
         <div class="gchips" id="s-chips"></div>
         <div class="rzone" id="s-reserve"></div>
       </aside>
@@ -422,9 +434,21 @@
     var r = parseInt(h.substr(0, 2), 16), g = parseInt(h.substr(2, 2), 16), b = parseInt(h.substr(4, 2), 16);
     return (0.299 * r + 0.587 * g + 0.114 * b) > 145 ? "#14171d" : "#f4f0e6";
   }
+  var TABLEHEX = {};   // hex saisis dans les tables Grist (colonne Hex) — prioritaires sur le code
+  function rebuildTableHex() {
+    TABLEHEX = {};
+    TYPES.forEach(function (t) {
+      (data[t.id] || []).forEach(function (r) {
+        if (r.hex && /^#?[0-9a-fA-F]{3,8}$/.test(r.hex)) {
+          var v = r.hex.charAt(0) === "#" ? r.hex : "#" + r.hex;
+          TABLEHEX[nameKey(r.nom)] = v;
+        }
+      });
+    });
+  }
   function paintHex(name, fallback) {
     var k = nameKey(name);
-    return SIMOHEX[k] || EXTRAHEX[k] || PAINTHEX[k] || SHADEHEX[k] || fallback || "#3a3f48";
+    return TABLEHEX[k] || SIMOHEX[k] || EXTRAHEX[k] || PAINTHEX[k] || SHADEHEX[k] || fallback || "#3a3f48";
   }
 
   // Couleurs échantillonnées sur l'affiche (Base / Layer 1 / Layer 2 / Dry), alignées sur RECIPES.
@@ -592,7 +616,7 @@
   // ---- supports (présentoirs) ----
   var racks = [];          // [{id, nom, lignes, colonnes, ordre}]
   var slots = [];          // [{id, presentoir, ligne, colonne, gamme, pot}]
-  var sFilter = "ALL", sQuery = "", dragging = null, busy = false, seq = -1, renaming = 0;
+  var sFilter = "ALL", sScope = "all", sQuery = "", dragging = null, busy = false, seq = -1, renaming = 0;
 
   var R = 85, CX = 100, CY = 110, ARC_LEN = Math.PI * R;
   function arcPath() { return "M " + (CX - R) + " " + CY + " A " + R + " " + R + " 0 0 1 " + (CX + R) + " " + CY; }
@@ -607,15 +631,15 @@
     if (Array.isArray(tbl)) {
       // format lignes (démo / onRecords)
       out = tbl.map(function (r) {
-        return { id: r.id, nom: r.Nom_du_pot || "", prix: +r.Prix_ || 0, metal: truthy(r.Metallique), have: truthy(r.Possede_x_), idx: r.A != null ? r.A : 0 };
+        return { id: r.id, nom: r.Nom_du_pot || "", prix: +r.Prix_ || 0, metal: truthy(r.Metallique), have: truthy(r.Possede_x_), idx: r.A != null ? r.A : 0, hex: r.Hex || "" };
       });
     } else {
       // format colonnaire (grist.docApi.fetchTable) : { id:[...], Prix_:[...], ... }
       var ids = (tbl && tbl.id) || [], nom = tbl.Nom_du_pot || [], prix = tbl.Prix_ || [],
-          metal = tbl.Metallique || [], poss = tbl.Possede_x_ || [], a = tbl.A || [];
+          metal = tbl.Metallique || [], poss = tbl.Possede_x_ || [], a = tbl.A || [], hx = tbl.Hex || [];
       out = [];
       for (var i = 0; i < ids.length; i++) {
-        out.push({ id: ids[i], nom: nom[i] || "", prix: +prix[i] || 0, metal: truthy(metal[i]), have: truthy(poss[i]), idx: a[i] != null ? a[i] : 0 });
+        out.push({ id: ids[i], nom: nom[i] || "", prix: +prix[i] || 0, metal: truthy(metal[i]), have: truthy(poss[i]), idx: a[i] != null ? a[i] : 0, hex: hx[i] || "" });
       }
     }
     return out.sort(function (x, y) { return x.nom.localeCompare(y.nom, "fr"); });
@@ -807,14 +831,21 @@
   }
   function potKey(gamme, nom) { return gamme + "|" + nameKey(nom); }
 
-  function ownedPots() {
+  function allPots() {
     var out = [];
     TYPES.forEach(function (t) {
       (data[t.id] || []).forEach(function (r) {
-        if (r.have) out.push({ gamme: t.id, nom: r.nom, metal: r.metal, key: potKey(t.id, r.nom) });
+        out.push({ gamme: t.id, nom: r.nom, metal: r.metal, have: r.have, key: potKey(t.id, r.nom) });
       });
     });
     return out;
+  }
+  function ownedSet() {
+    var set = {};
+    TYPES.forEach(function (t) {
+      (data[t.id] || []).forEach(function (r) { if (r.have) set[potKey(t.id, r.nom)] = true; });
+    });
+    return set;
   }
   function potFill(nom, metal) {
     var hex = paintHex(nom);
@@ -825,14 +856,15 @@
   }
 
   function renderSupports() {
-    var placed = {}, byCell = {};
+    var placed = {}, byCell = {}, owned = ownedSet();
     slots.forEach(function (s) {
       placed[potKey(s.gamme, s.pot)] = s;
       byCell[s.rack + ":" + s.l + ":" + s.c] = s;
     });
 
     /* --- réserve --- */
-    var list = ownedPots().filter(function (p) { return !placed[p.key]; });
+    var list = allPots().filter(function (p) { return !placed[p.key]; });
+    if (sScope === "have") list = list.filter(function (p) { return p.have; });
     if (sFilter !== "ALL") list = list.filter(function (p) { return p.gamme === sFilter; });
     if (sQuery.trim()) {
       var q = nameKey(sQuery);
@@ -842,6 +874,9 @@
     list.sort(function (a, b) { return (order[a.gamme] - order[b.gamme]) || a.nom.localeCompare(b.nom, "fr"); });
 
     document.getElementById("s-cnt").textContent = list.length + (list.length < 2 ? " pot à ranger" : " pots à ranger");
+    document.getElementById("s-scope").innerHTML =
+      '<button data-s="have" class="' + (sScope === "have" ? "on" : "") + '" type="button">Détenus</button>' +
+      '<button data-s="all" class="' + (sScope === "all" ? "on" : "") + '" type="button">Tous</button>';
     document.getElementById("s-chips").innerHTML =
       '<button class="gchip' + (sFilter === "ALL" ? " on" : "") + '" data-g="ALL" type="button">Tout</button>' +
       TYPES.map(function (t) {
@@ -850,12 +885,13 @@
       }).join("");
     document.getElementById("s-reserve").innerHTML = list.length
       ? list.map(function (p) {
-          return '<div class="pchip" draggable="true" data-g="' + esc(p.gamme) + '" data-n="' + esc(p.nom) + '" title="' + esc(p.nom) + ' · ' + esc(COLOR[p.gamme].label) + '">' +
+          return '<div class="pchip' + (p.have ? "" : " off") + '" draggable="true" data-g="' + esc(p.gamme) + '" data-n="' + esc(p.nom) + '" title="' + esc(p.nom) + ' · ' + esc(COLOR[p.gamme].label) + (p.have ? "" : " · non détenu") + '">' +
             '<span class="psw" style="' + potFill(p.nom, p.metal) + '"></span>' +
             '<span class="pnm">' + esc(p.nom) + '</span>' +
+            (p.have ? "" : '<span class="pmiss" aria-label="non détenu">à acquérir</span>') +
             '<span class="pgm" style="color:' + COLOR[p.gamme].c2 + '">' + esc(COLOR[p.gamme].label) + '</span></div>';
         }).join("")
-      : '<div class="empty">Tous les pots détenus sont rangés.</div>';
+      : '<div class="empty">' + (sScope === "have" ? "Tous les pots détenus sont rangés." : "Aucun pot pour ce filtre.") + '</div>';
 
     /* --- présentoirs --- */
     var totSlots = 0;
@@ -875,7 +911,7 @@
               cells += '<div class="cell" data-rk="' + rk.id + '" data-l="' + l + '" data-c="' + c + '">' +
                 '<div class="arch"></div>' +
                 (s
-                  ? '<div class="pot" draggable="true" data-sid="' + s.id + '" title="' + esc(s.pot) + ' · ' + esc((COLOR[s.gamme] || {}).label || s.gamme) + '">' +
+                  ? '<div class="pot' + (owned[potKey(s.gamme, s.pot)] ? "" : " off") + '" draggable="true" data-sid="' + s.id + '" title="' + esc(s.pot) + ' · ' + esc((COLOR[s.gamme] || {}).label || s.gamme) + (owned[potKey(s.gamme, s.pot)] ? "" : " · non détenu") + '">' +
                       '<div class="cap"><i style="background:' + ((COLOR[s.gamme] || {}).c2 || "#d4af37") + '"></i></div>' +
                       '<div class="bod" style="' + potFill(s.pot, false) + '"></div>' +
                       '<button class="x" data-rm="' + s.id + '" type="button" aria-label="Retirer ' + esc(s.pot) + '">✕</button></div>'
@@ -1011,6 +1047,7 @@
       var ren = e.target.closest("[data-ren]"); if (ren) { renaming = +ren.getAttribute("data-ren"); renderSupports(); return; }
       var rm = e.target.closest("[data-rm]"); if (rm) { removeSlot(+rm.getAttribute("data-rm")); return; }
       var del = e.target.closest("[data-del]"); if (del) { if (!del.disabled) removeRack(+del.getAttribute("data-del")); return; }
+      var sc = e.target.closest("[data-s]"); if (sc) { sScope = sc.getAttribute("data-s"); renderSupports(); return; }
       var ch = e.target.closest(".gchip"); if (ch) { sFilter = ch.getAttribute("data-g"); renderSupports(); return; }
       if (e.target.closest("#s-add")) addRack();
     });
@@ -1078,6 +1115,7 @@
         try { data[TYPES[i].id] = normalize(await grist.docApi.fetchTable(TYPES[i].id)); okCount++; }
         catch (e) { lastErr = e; data[TYPES[i].id] = data[TYPES[i].id] || []; }
       }
+      rebuildTableHex();
       await fetchSupports();
     } finally { fetching = false; }
     if (okCount === 0) {
