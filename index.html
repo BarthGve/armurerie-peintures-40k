@@ -206,9 +206,8 @@
   .pchip { display: flex; align-items: center; gap: 9px; padding: 7px 9px; border-radius: 6px; cursor: grab; background: var(--panel-2); border: 1px solid var(--line); }
   .pchip:hover { border-color: var(--line-hot); }
   .pchip.drag { opacity: .35; }
-  .pchip.off { opacity: .5; border-style: dashed; }
-  .pchip.off .pnm { color: var(--muted); }
-  .pchip.off .psw { filter: grayscale(.55) brightness(.8); }
+  .pchip.off { border-style: dashed; }
+  .pchip.off .psw { filter: grayscale(.85) brightness(.82); }
   .pchip .pmiss { font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 1px 4px; flex: none; }
   .pchip .psw { width: 15px; height: 21px; border-radius: 3px 3px 4px 4px; flex: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.35); background-image: linear-gradient(120deg, rgba(255,255,255,.38), rgba(255,255,255,0) 55%); }
   .pchip .pnm { flex: 1; min-width: 0; font-size: 13px; letter-spacing: .3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -250,7 +249,8 @@
   .cell .cnum { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 600; color: rgba(80,58,30,.6); }
   .pot { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 50px; cursor: grab; animation: potpop .28s ease-out; }
   .pot.drag { opacity: .35; }
-  .pot.off .bod { filter: grayscale(.55) brightness(.82); }
+  .pot.off .bod { filter: grayscale(.95) brightness(.7); }
+  .pot.off .cap i { filter: grayscale(1); opacity: .5; }
   .pot.off::after { content: ""; position: absolute; inset: 0 0 -2px 0; border: 1px dashed rgba(231,230,225,.4); border-radius: 4px 4px 7px 7px; pointer-events: none; }
   .pot .cap { position: relative; height: 13px; width: 54px; margin: 0 auto; border-radius: 6px 6px 3px 3px; background: linear-gradient(180deg, rgba(242,244,247,.94), rgba(200,203,207,.82)); box-shadow: 0 2px 4px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.7); }
   .pot .cap i { position: absolute; top: 3px; left: 5px; width: 6px; height: 6px; border-radius: 50%; }
